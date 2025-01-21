@@ -18,6 +18,8 @@ PaddleOCR aims to create multilingual, awesome, leading, and practical OCR tools
   
 - This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed.
 
+- Don't be confused when it takes a longer time to start when running it the first time. This is the normal behavior. Afterwards it runs normally.
+
 - Please only report bugs that are specific to this standalone executable and are working correctly in the original repository.  
   
 - A few changes had to be made to the source code to allow the creation of this executable. I will update it soon.  
