@@ -1,0 +1,1638 @@
+From 09f0d8ebd310ae80830a44e20027203cbfca1951 Mon Sep 17 00:00:00 2001
+From: Temporary User <temporary@example.com>
+Date: Wed, 22 Jan 2025 20:48:33 +0100
+Subject: [PATCH] Modified imports and paths for Nuitka compatibility
+
+---
+ .gitignore                                    |  3 +
+ paddleocr.py                                  | 62 ++++++++++---------
+ ppocr/data/__init__.py                        | 16 ++---
+ ppocr/data/imaug/__init__.py                  | 44 ++++++-------
+ ppocr/data/imaug/copy_paste.py                |  6 +-
+ ppocr/data/imaug/ct_process.py                |  2 +-
+ ppocr/data/imaug/drrg_targets.py              |  2 +-
+ ppocr/data/imaug/fce_aug.py                   |  2 +-
+ ppocr/data/imaug/label_ops.py                 |  6 +-
+ ppocr/data/imaug/pg_process.py                |  2 +-
+ ppocr/data/imaug/rec_img_aug.py               |  4 +-
+ ppocr/data/imaug/ssl_img_aug.py               |  2 +-
+ ppocr/data/imaug/text_image_aug/__init__.py   |  2 +-
+ ppocr/data/imaug/text_image_aug/augment.py    |  2 +-
+ ppocr/data/imaug/vqa/__init__.py              |  2 +-
+ ppocr/data/imaug/vqa/token/__init__.py        |  8 +--
+ ppocr/data/latexocr_dataset.py                |  4 +-
+ ppocr/data/lmdb_dataset.py                    |  2 +-
+ ppocr/data/pgnet_dataset.py                   |  2 +-
+ ppocr/data/pubtab_dataset.py                  |  2 +-
+ ppocr/data/simple_dataset.py                  |  2 +-
+ ppocr/postprocess/__init__.py                 | 30 ++++-----
+ ppocr/postprocess/east_postprocess.py         |  4 +-
+ ppocr/postprocess/fce_postprocess.py          |  2 +-
+ ppocr/postprocess/pg_postprocess.py           |  2 +-
+ ppocr/postprocess/pse_postprocess/__init__.py |  2 +-
+ .../pse_postprocess/pse/__init__.py           |  2 +-
+ .../pse_postprocess/pse_postprocess.py        |  2 +-
+ ppocr/postprocess/sast_postprocess.py         |  4 +-
+ ppocr/postprocess/table_postprocess.py        |  2 +-
+ .../vqa_token_ser_layoutlm_postprocess.py     |  2 +-
+ ppocr/utils/e2e_metric/Deteval.py             |  4 +-
+ ppocr/utils/e2e_utils/pgnet_pp_utils.py       |  4 +-
+ ppocr/utils/export_model.py                   |  8 +--
+ ppocr/utils/loggers/__init__.py               |  4 +-
+ ppocr/utils/loggers/loggers.py                |  2 +-
+ ppocr/utils/loggers/wandb_logger.py           |  4 +-
+ ppocr/utils/network.py                        |  2 +-
+ ppocr/utils/save_load.py                      |  4 +-
+ ppstructure/kie/predict_kie_token_ser.py      | 14 ++---
+ ppstructure/kie/predict_kie_token_ser_re.py   | 16 ++---
+ ppstructure/layout/predict_layout.py          | 14 ++---
+ ppstructure/pdf2word/pdf2word.py              |  8 +--
+ ppstructure/predict_system.py                 | 22 +++----
+ ppstructure/recovery/recovery_to_doc.py       |  4 +-
+ ppstructure/recovery/recovery_to_markdown.py  |  2 +-
+ ppstructure/table/eval_table.py               |  8 +--
+ ppstructure/table/matcher.py                  |  2 +-
+ ppstructure/table/predict_structure.py        | 14 ++---
+ ppstructure/table/predict_table.py            | 20 +++---
+ ppstructure/table/table_metric/__init__.py    |  2 +-
+ .../table/table_metric/table_metric.py        |  2 +-
+ ppstructure/utility.py                        |  2 +-
+ tools/eval.py                                 | 12 ++--
+ tools/export_center.py                        | 12 ++--
+ tools/export_model.py                         |  4 +-
+ tools/infer/predict_cls.py                    |  8 +--
+ tools/infer/predict_det.py                    | 10 +--
+ tools/infer/predict_e2e.py                    | 10 +--
+ tools/infer/predict_rec.py                    |  8 +--
+ tools/infer/predict_sr.py                     |  8 +--
+ tools/infer/predict_system.py                 | 14 ++---
+ tools/infer/utility.py                        |  2 +-
+ tools/infer_cls.py                            | 12 ++--
+ tools/infer_det.py                            | 12 ++--
+ tools/infer_e2e.py                            | 12 ++--
+ tools/infer_kie.py                            |  8 +--
+ tools/infer_kie_token_ser.py                  | 14 ++---
+ tools/infer_kie_token_ser_re.py               | 18 +++---
+ tools/infer_rec.py                            | 12 ++--
+ tools/infer_sr.py                             | 12 ++--
+ tools/infer_table.py                          | 16 ++---
+ tools/program.py                              | 16 ++---
+ tools/test_hubserving.py                      | 10 +--
+ tools/train.py                                | 22 +++----
+ 75 files changed, 325 insertions(+), 318 deletions(-)
+ create mode 100644 .gitignore
+
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..11f6f75
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,3 @@
++# Python cache files and folders
++__pycache__/
++*.py[cod]
+\ No newline at end of file
+diff --git a/paddleocr.py b/paddleocr.py
+index bdf367c..6d66dba 100644
+--- a/paddleocr.py
++++ b/paddleocr.py
+@@ -14,14 +14,6 @@
+ 
+ import os
+ import sys
+-import importlib
+-
+-__dir__ = os.path.dirname(__file__)
+-
+-from paddle.utils import try_import
+-
+-sys.path.append(os.path.join(__dir__, ""))
+-
+ import cv2
+ from copy import deepcopy
+ import logging
+@@ -32,41 +24,50 @@ from io import BytesIO
+ import pprint
+ from PIL import Image
+ 
++__dir__ = os.path.dirname(__file__)
+ 
+-def _import_file(module_name, file_path, make_importable=False):
+-    spec = importlib.util.spec_from_file_location(module_name, file_path)
+-    module = importlib.util.module_from_spec(spec)
+-    spec.loader.exec_module(module)
+-    if make_importable:
+-        sys.modules[module_name] = module
+-    return module
++# Update sys.path to include the current directory
++sys.path.append(os.path.join(__dir__, ""))
+ 
++# Import PaddleOCR dependencies
++from paddle.utils import try_import
+ 
+-tools = _import_file(
+-    "tools", os.path.join(__dir__, "tools/__init__.py"), make_importable=True
+-)
+-ppocr = importlib.import_module("ppocr", "paddleocr")
+-ppstructure = importlib.import_module("ppstructure", "paddleocr")
+-from ppocr.utils.logging import get_logger
++# Explicitly import the `tools` module
++from paddleocr.tools import *
+ 
+-from ppocr.utils.utility import (
++# Explicitly import ppocr and ppstructure submodules
++from paddleocr.ppocr import *
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.utility import (
+     check_and_read,
+     get_image_file_list,
+     alpha_to_color,
+     binarize_img,
+ )
+-from ppocr.utils.network import (
++from paddleocr.ppocr.utils.network import (
+     maybe_download,
+     download_with_progressbar,
+     is_link,
+     confirm_model_dir_url,
+ )
+-from tools.infer import predict_system
+-from tools.infer.utility import draw_ocr, str2bool, check_gpu
+-from ppstructure.utility import init_args, draw_structure_result
+-from ppstructure.predict_system import StructureSystem, save_structure_res, to_excel
+-from ppstructure.recovery.recovery_to_doc import sorted_layout_boxes, convert_info_docx
+-from ppstructure.recovery.recovery_to_markdown import convert_info_markdown
++
++# Explicitly import ppstructure submodules
++from paddleocr.ppstructure.utility import init_args, draw_structure_result
++from paddleocr.ppstructure.predict_system import (
++    StructureSystem,
++    save_structure_res,
++    to_excel,
++)
++from paddleocr.ppstructure.recovery.recovery_to_doc import (
++    sorted_layout_boxes,
++    convert_info_docx,
++)
++from paddleocr.ppstructure.recovery.recovery_to_markdown import convert_info_markdown
++
++# Import tools.infer and its submodules explicitly
++from paddleocr.tools.infer import predict_system
++from paddleocr.tools.infer.utility import draw_ocr, str2bool, check_gpu
++
+ 
+ logger = get_logger()
+ 
+@@ -975,6 +976,9 @@ def main():
+             if result is not None:
+                 lines = []
+                 for res in result:
++                    if res is None:
++                        logger.warning(f"No text found in image {img_path}")
++                        continue
+                     for line in res:
+                         logger.info(line)
+                         lines.append(pprint.pformat(line) + "\n")
+diff --git a/ppocr/data/__init__.py b/ppocr/data/__init__.py
+index 5678aeb..715aa5b 100644
+--- a/ppocr/data/__init__.py
++++ b/ppocr/data/__init__.py
+@@ -32,13 +32,13 @@ import copy
+ from paddle.io import Dataset, DataLoader, BatchSampler, DistributedBatchSampler
+ import paddle.distributed as dist
+ 
+-from ppocr.data.imaug import transform, create_operators
+-from ppocr.data.simple_dataset import SimpleDataSet, MultiScaleDataSet
+-from ppocr.data.lmdb_dataset import LMDBDataSet, LMDBDataSetSR, LMDBDataSetTableMaster
+-from ppocr.data.pgnet_dataset import PGDataSet
+-from ppocr.data.pubtab_dataset import PubTabDataSet
+-from ppocr.data.multi_scale_sampler import MultiScaleSampler
+-from ppocr.data.latexocr_dataset import LaTeXOCRDataSet
++from paddleocr.ppocr.data.imaug import transform, create_operators
++from paddleocr.ppocr.data.simple_dataset import SimpleDataSet, MultiScaleDataSet
++from paddleocr.ppocr.data.lmdb_dataset import LMDBDataSet, LMDBDataSetSR, LMDBDataSetTableMaster
++from paddleocr.ppocr.data.pgnet_dataset import PGDataSet
++from paddleocr.ppocr.data.pubtab_dataset import PubTabDataSet
++from paddleocr.ppocr.data.multi_scale_sampler import MultiScaleSampler
++from paddleocr.ppocr.data.latexocr_dataset import LaTeXOCRDataSet
+ 
+ # for PaddleX dataset_type
+ TextDetDataset = SimpleDataSet
+@@ -135,7 +135,7 @@ def build_dataloader(config, mode, device, logger, seed=None):
+         )
+ 
+     if "collate_fn" in loader_config:
+-        from . import collate_fn
++        from paddleocr.ppocr.data import collate_fn
+ 
+         collate_fn = getattr(collate_fn, loader_config["collate_fn"])()
+     else:
+diff --git a/ppocr/data/imaug/__init__.py b/ppocr/data/imaug/__init__.py
+index d76a155..977cdb0 100644
+--- a/ppocr/data/imaug/__init__.py
++++ b/ppocr/data/imaug/__init__.py
+@@ -16,14 +16,14 @@ from __future__ import division
+ from __future__ import print_function
+ from __future__ import unicode_literals
+ 
+-from .iaa_augment import IaaAugment
+-from .make_border_map import MakeBorderMap
+-from .make_shrink_map import MakeShrinkMap
+-from .random_crop_data import EastRandomCropData, RandomCropImgMask
+-from .make_pse_gt import MakePseGt
++from paddleocr.ppocr.data.imaug.iaa_augment import IaaAugment
++from paddleocr.ppocr.data.imaug.make_border_map import MakeBorderMap
++from paddleocr.ppocr.data.imaug.make_shrink_map import MakeShrinkMap
++from paddleocr.ppocr.data.imaug.random_crop_data import EastRandomCropData, RandomCropImgMask
++from paddleocr.ppocr.data.imaug.make_pse_gt import MakePseGt
+ 
+ 
+-from .rec_img_aug import (
++from paddleocr.ppocr.data.imaug.rec_img_aug import (
+     BaseDataAugmentation,
+     RecAug,
+     RecConAug,
+@@ -43,25 +43,25 @@ from .rec_img_aug import (
+     SVTRRecAug,
+     ParseQRecAug,
+ )
+-from .ssl_img_aug import SSLRotateResize
+-from .randaugment import RandAugment
+-from .copy_paste import CopyPaste
+-from .ColorJitter import ColorJitter
+-from .operators import *
+-from .label_ops import *
++from paddleocr.ppocr.data.imaug.ssl_img_aug import SSLRotateResize
++from paddleocr.ppocr.data.imaug.randaugment import RandAugment
++from paddleocr.ppocr.data.imaug.copy_paste import CopyPaste
++from paddleocr.ppocr.data.imaug.ColorJitter import ColorJitter
++from paddleocr.ppocr.data.imaug.operators import *
++from paddleocr.ppocr.data.imaug.label_ops import *
+ 
+-from .east_process import *
+-from .sast_process import *
+-from .pg_process import *
+-from .table_ops import *
++from paddleocr.ppocr.data.imaug.east_process import *
++from paddleocr.ppocr.data.imaug.sast_process import *
++from paddleocr.ppocr.data.imaug.pg_process import *
++from paddleocr.ppocr.data.imaug.table_ops import *
+ 
+-from .vqa import *
++from paddleocr.ppocr.data.imaug.vqa import *
+ 
+-from .fce_aug import *
+-from .fce_targets import FCENetTargets
+-from .ct_process import *
+-from .drrg_targets import DRRGTargets
+-from .latex_ocr_aug import *
++from paddleocr.ppocr.data.imaug.fce_aug import *
++from paddleocr.ppocr.data.imaug.fce_targets import FCENetTargets
++from paddleocr.ppocr.data.imaug.ct_process import *
++from paddleocr.ppocr.data.imaug.drrg_targets import DRRGTargets
++from paddleocr.ppocr.data.imaug.latex_ocr_aug import *
+ 
+ 
+ def transform(data, ops=None):
+diff --git a/ppocr/data/imaug/copy_paste.py b/ppocr/data/imaug/copy_paste.py
+index 3634fbe..a67f512 100644
+--- a/ppocr/data/imaug/copy_paste.py
++++ b/ppocr/data/imaug/copy_paste.py
+@@ -18,9 +18,9 @@ import numpy as np
+ from PIL import Image
+ from shapely.geometry import Polygon
+ 
+-from ppocr.data.imaug.iaa_augment import IaaAugment
+-from ppocr.data.imaug.random_crop_data import is_poly_outside_rect
+-from tools.infer.utility import get_rotate_crop_image
++from paddleocr.ppocr.data.imaug.iaa_augment import IaaAugment
++from paddleocr.ppocr.data.imaug.random_crop_data import is_poly_outside_rect
++from paddleocr.tools.infer.utility import get_rotate_crop_image
+ 
+ 
+ class CopyPaste(object):
+diff --git a/ppocr/data/imaug/ct_process.py b/ppocr/data/imaug/ct_process.py
+index 26e111d..4ae97b6 100644
+--- a/ppocr/data/imaug/ct_process.py
++++ b/ppocr/data/imaug/ct_process.py
+@@ -22,7 +22,7 @@ from PIL import Image
+ 
+ import paddle.vision.transforms as transforms
+ 
+-from ppocr.utils.utility import check_install
++from paddleocr.ppocr.utils.utility import check_install
+ 
+ 
+ class RandomScale:
+diff --git a/ppocr/data/imaug/drrg_targets.py b/ppocr/data/imaug/drrg_targets.py
+index 8eeef26..b1df83e 100644
+--- a/ppocr/data/imaug/drrg_targets.py
++++ b/ppocr/data/imaug/drrg_targets.py
+@@ -18,7 +18,7 @@ https://github.com/open-mmlab/mmocr/blob/main/mmocr/datasets/pipelines/textdet_t
+ 
+ import cv2
+ import numpy as np
+-from ppocr.utils.utility import check_install
++from paddleocr.ppocr.utils.utility import check_install
+ from numpy.linalg import norm
+ 
+ 
+diff --git a/ppocr/data/imaug/fce_aug.py b/ppocr/data/imaug/fce_aug.py
+index 2697344..a4e4d94 100644
+--- a/ppocr/data/imaug/fce_aug.py
++++ b/ppocr/data/imaug/fce_aug.py
+@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw
+ import cv2
+ from shapely.geometry import Polygon
+ import math
+-from ppocr.utils.poly_nms import poly_intersection
++from paddleocr.ppocr.utils.poly_nms import poly_intersection
+ 
+ 
+ class RandomScaling:
+diff --git a/ppocr/data/imaug/label_ops.py b/ppocr/data/imaug/label_ops.py
+index 7d4afec..a19f7f7 100644
+--- a/ppocr/data/imaug/label_ops.py
++++ b/ppocr/data/imaug/label_ops.py
+@@ -27,8 +27,8 @@ import random
+ from random import sample
+ from collections import defaultdict
+ 
+-from ppocr.utils.logging import get_logger
+-from ppocr.data.imaug.vqa.augment import order_by_tbyx
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.data.imaug.vqa.augment import order_by_tbyx
+ 
+ 
+ class ClsLabelEncode(object):
+@@ -1028,7 +1028,7 @@ class VQATokenLabelEncode(object):
+             LayoutLMTokenizer,
+             LayoutLMv2Tokenizer,
+         )
+-        from ppocr.utils.utility import load_vqa_bio_label_maps
++        from paddleocr.ppocr.utils.utility import load_vqa_bio_label_maps
+ 
+         tokenizer_dict = {
+             "LayoutXLM": {
+diff --git a/ppocr/data/imaug/pg_process.py b/ppocr/data/imaug/pg_process.py
+index cdd816c..eaa61ae 100644
+--- a/ppocr/data/imaug/pg_process.py
++++ b/ppocr/data/imaug/pg_process.py
+@@ -16,7 +16,7 @@ import math
+ import cv2
+ import numpy as np
+ from skimage.morphology._skeletonize import thin
+-from ppocr.utils.e2e_utils.extract_textpoint_fast import (
++from paddleocr.ppocr.utils.e2e_utils.extract_textpoint_fast import (
+     sort_and_expand_with_direction_v2,
+ )
+ 
+diff --git a/ppocr/data/imaug/rec_img_aug.py b/ppocr/data/imaug/rec_img_aug.py
+index 2420e42..17b160b 100644
+--- a/ppocr/data/imaug/rec_img_aug.py
++++ b/ppocr/data/imaug/rec_img_aug.py
+@@ -19,8 +19,8 @@ import random
+ import copy
+ from PIL import Image
+ import PIL
+-from .text_image_aug import tia_perspective, tia_stretch, tia_distort
+-from .abinet_aug import (
++from paddleocr.ppocr.data.imaug.text_image_aug import tia_perspective, tia_stretch, tia_distort
++from paddleocr.ppocr.data.imaug.abinet_aug import (
+     CVGeometry,
+     CVDeterioration,
+     CVColorJitter,
+diff --git a/ppocr/data/imaug/ssl_img_aug.py b/ppocr/data/imaug/ssl_img_aug.py
+index 8162087..3d6ef66 100644
+--- a/ppocr/data/imaug/ssl_img_aug.py
++++ b/ppocr/data/imaug/ssl_img_aug.py
+@@ -18,7 +18,7 @@ import numpy as np
+ import random
+ from PIL import Image
+ 
+-from .rec_img_aug import resize_norm_img
++from paddleocr.ppocr.data.imaug.rec_img_aug import resize_norm_img
+ 
+ 
+ class SSLRotateResize(object):
+diff --git a/ppocr/data/imaug/text_image_aug/__init__.py b/ppocr/data/imaug/text_image_aug/__init__.py
+index 16f179f..a7f100d 100644
+--- a/ppocr/data/imaug/text_image_aug/__init__.py
++++ b/ppocr/data/imaug/text_image_aug/__init__.py
+@@ -12,6 +12,6 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-from .augment import tia_perspective, tia_distort, tia_stretch
++from paddleocr.ppocr.data.imaug.text_image_aug.augment import tia_perspective, tia_distort, tia_stretch
+ 
+ __all__ = ["tia_distort", "tia_stretch", "tia_perspective"]
+diff --git a/ppocr/data/imaug/text_image_aug/augment.py b/ppocr/data/imaug/text_image_aug/augment.py
+index 1044abd..429e019 100644
+--- a/ppocr/data/imaug/text_image_aug/augment.py
++++ b/ppocr/data/imaug/text_image_aug/augment.py
+@@ -17,7 +17,7 @@ https://github.com/RubanSeven/Text-Image-Augmentation-python/blob/master/augment
+ """
+ 
+ import numpy as np
+-from .warp_mls import WarpMLS
++from paddleocr.ppocr.data.imaug.text_image_aug.warp_mls import WarpMLS
+ 
+ 
+ def tia_distort(src, segment=4):
+diff --git a/ppocr/data/imaug/vqa/__init__.py b/ppocr/data/imaug/vqa/__init__.py
+index 812f20b..b28e6cb 100644
+--- a/ppocr/data/imaug/vqa/__init__.py
++++ b/ppocr/data/imaug/vqa/__init__.py
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-from .token import (
++from paddleocr.ppocr.data.imaug.vqa.token import (
+     VQATokenPad,
+     VQASerTokenChunk,
+     VQAReTokenChunk,
+diff --git a/ppocr/data/imaug/vqa/token/__init__.py b/ppocr/data/imaug/vqa/token/__init__.py
+index e349dd7..03b2101 100644
+--- a/ppocr/data/imaug/vqa/token/__init__.py
++++ b/ppocr/data/imaug/vqa/token/__init__.py
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-from .vqa_token_chunk import VQASerTokenChunk, VQAReTokenChunk
+-from .vqa_token_pad import VQATokenPad
+-from .vqa_token_relation import VQAReTokenRelation
+-from .vqa_re_convert import TensorizeEntitiesRelations
++from paddleocr.ppocr.data.imaug.vqa.token.vqa_token_chunk import VQASerTokenChunk, VQAReTokenChunk
++from paddleocr.ppocr.data.imaug.vqa.token.vqa_token_pad import VQATokenPad
++from paddleocr.ppocr.data.imaug.vqa.token.vqa_token_relation import VQAReTokenRelation
++from paddleocr.ppocr.data.imaug.vqa.token.vqa_re_convert import TensorizeEntitiesRelations
+diff --git a/ppocr/data/latexocr_dataset.py b/ppocr/data/latexocr_dataset.py
+index b15d6c1..22813e9 100644
+--- a/ppocr/data/latexocr_dataset.py
++++ b/ppocr/data/latexocr_dataset.py
+@@ -27,8 +27,8 @@ import random
+ import traceback
+ import paddle
+ from paddle.io import Dataset
+-from .imaug.label_ops import LatexOCRLabelEncode
+-from .imaug import transform, create_operators
++from paddleocr.ppocr.data.imaug.label_ops import LatexOCRLabelEncode
++from paddleocr.ppocr.data.imaug import transform, create_operators
+ 
+ 
+ class LaTeXOCRDataSet(Dataset):
+diff --git a/ppocr/data/lmdb_dataset.py b/ppocr/data/lmdb_dataset.py
+index 778adaa..29bc5d7 100644
+--- a/ppocr/data/lmdb_dataset.py
++++ b/ppocr/data/lmdb_dataset.py
+@@ -21,7 +21,7 @@ import six
+ import pickle
+ from PIL import Image
+ 
+-from .imaug import transform, create_operators
++from paddleocr.ppocr.data.imaug import transform, create_operators
+ 
+ 
+ class LMDBDataSet(Dataset):
+diff --git a/ppocr/data/pgnet_dataset.py b/ppocr/data/pgnet_dataset.py
+index 839ac72..0c3b70e 100644
+--- a/ppocr/data/pgnet_dataset.py
++++ b/ppocr/data/pgnet_dataset.py
+@@ -14,7 +14,7 @@
+ import numpy as np
+ import os
+ from paddle.io import Dataset
+-from .imaug import transform, create_operators
++from paddleocr.ppocr.data.imaug import transform, create_operators
+ import random
+ 
+ 
+diff --git a/ppocr/data/pubtab_dataset.py b/ppocr/data/pubtab_dataset.py
+index 2365b13..04a7601 100644
+--- a/ppocr/data/pubtab_dataset.py
++++ b/ppocr/data/pubtab_dataset.py
+@@ -18,7 +18,7 @@ from paddle.io import Dataset
+ import json
+ from copy import deepcopy
+ 
+-from .imaug import transform, create_operators
++from paddleocr.ppocr.data.imaug import transform, create_operators
+ 
+ 
+ class PubTabDataSet(Dataset):
+diff --git a/ppocr/data/simple_dataset.py b/ppocr/data/simple_dataset.py
+index 4552d23..7986086 100644
+--- a/ppocr/data/simple_dataset.py
++++ b/ppocr/data/simple_dataset.py
+@@ -19,7 +19,7 @@ import json
+ import random
+ import traceback
+ from paddle.io import Dataset
+-from .imaug import transform, create_operators
++from paddleocr.ppocr.data.imaug import transform, create_operators
+ 
+ 
+ class SimpleDataSet(Dataset):
+diff --git a/ppocr/postprocess/__init__.py b/ppocr/postprocess/__init__.py
+index 04579a3..dbcbad4 100644
+--- a/ppocr/postprocess/__init__.py
++++ b/ppocr/postprocess/__init__.py
+@@ -21,11 +21,11 @@ import copy
+ 
+ __all__ = ["build_post_process"]
+ 
+-from .db_postprocess import DBPostProcess, DistillationDBPostProcess
+-from .east_postprocess import EASTPostProcess
+-from .sast_postprocess import SASTPostProcess
+-from .fce_postprocess import FCEPostProcess
+-from .rec_postprocess import (
++from paddleocr.ppocr.postprocess.db_postprocess import DBPostProcess, DistillationDBPostProcess
++from paddleocr.ppocr.postprocess.east_postprocess import EASTPostProcess
++from paddleocr.ppocr.postprocess.sast_postprocess import SASTPostProcess
++from paddleocr.ppocr.postprocess.fce_postprocess import FCEPostProcess
++from paddleocr.ppocr.postprocess.rec_postprocess import (
+     CTCLabelDecode,
+     AttnLabelDecode,
+     SRNLabelDecode,
+@@ -44,21 +44,21 @@ from .rec_postprocess import (
+     CPPDLabelDecode,
+     LaTeXOCRDecode,
+ )
+-from .cls_postprocess import ClsPostProcess
+-from .pg_postprocess import PGPostProcess
+-from .vqa_token_ser_layoutlm_postprocess import (
++from paddleocr.ppocr.postprocess.cls_postprocess import ClsPostProcess
++from paddleocr.ppocr.postprocess.pg_postprocess import PGPostProcess
++from paddleocr.ppocr.postprocess.vqa_token_ser_layoutlm_postprocess import (
+     VQASerTokenLayoutLMPostProcess,
+     DistillationSerPostProcess,
+ )
+-from .vqa_token_re_layoutlm_postprocess import (
++from paddleocr.ppocr.postprocess.vqa_token_re_layoutlm_postprocess import (
+     VQAReTokenLayoutLMPostProcess,
+     DistillationRePostProcess,
+ )
+-from .table_postprocess import TableMasterLabelDecode, TableLabelDecode
+-from .picodet_postprocess import PicoDetPostProcess
+-from .ct_postprocess import CTPostProcess
+-from .drrg_postprocess import DRRGPostprocess
+-from .rec_postprocess import CANLabelDecode
++from paddleocr.ppocr.postprocess.table_postprocess import TableMasterLabelDecode, TableLabelDecode
++from paddleocr.ppocr.postprocess.picodet_postprocess import PicoDetPostProcess
++from paddleocr.ppocr.postprocess.ct_postprocess import CTPostProcess
++from paddleocr.ppocr.postprocess.drrg_postprocess import DRRGPostprocess
++from paddleocr.ppocr.postprocess.rec_postprocess import CANLabelDecode
+ 
+ 
+ def build_post_process(config, global_config=None):
+@@ -101,7 +101,7 @@ def build_post_process(config, global_config=None):
+     ]
+ 
+     if config["name"] == "PSEPostProcess":
+-        from .pse_postprocess import PSEPostProcess
++        from paddleocr.ppocr.postprocess.pse_postprocess import PSEPostProcess
+ 
+         support_dict.append("PSEPostProcess")
+ 
+diff --git a/ppocr/postprocess/east_postprocess.py b/ppocr/postprocess/east_postprocess.py
+index 0b138ad..1a3c8cb 100644
+--- a/ppocr/postprocess/east_postprocess.py
++++ b/ppocr/postprocess/east_postprocess.py
+@@ -17,12 +17,12 @@ from __future__ import division
+ from __future__ import print_function
+ 
+ import numpy as np
+-from .locality_aware_nms import nms_locality
++from paddleocr.ppocr.postprocess.locality_aware_nms import nms_locality
+ import cv2
+ import paddle
+ 
+ import os
+-from ppocr.utils.utility import check_install
++from paddleocr.ppocr.utils.utility import check_install
+ import sys
+ 
+ 
+diff --git a/ppocr/postprocess/fce_postprocess.py b/ppocr/postprocess/fce_postprocess.py
+index bff9316..9887c05 100644
+--- a/ppocr/postprocess/fce_postprocess.py
++++ b/ppocr/postprocess/fce_postprocess.py
+@@ -20,7 +20,7 @@ import cv2
+ import paddle
+ import numpy as np
+ from numpy.fft import ifft
+-from ppocr.utils.poly_nms import poly_nms, valid_boundary
++from paddleocr.ppocr.utils.poly_nms import poly_nms, valid_boundary
+ 
+ 
+ def fill_hole(input_mask):
+diff --git a/ppocr/postprocess/pg_postprocess.py b/ppocr/postprocess/pg_postprocess.py
+index 31761fa..fa6fef0 100644
+--- a/ppocr/postprocess/pg_postprocess.py
++++ b/ppocr/postprocess/pg_postprocess.py
+@@ -22,7 +22,7 @@ import sys
+ __dir__ = os.path.dirname(__file__)
+ sys.path.append(__dir__)
+ sys.path.append(os.path.join(__dir__, ".."))
+-from ppocr.utils.e2e_utils.pgnet_pp_utils import PGNet_PostProcess
++from paddleocr.ppocr.utils.e2e_utils.pgnet_pp_utils import PGNet_PostProcess
+ 
+ 
+ class PGPostProcess(object):
+diff --git a/ppocr/postprocess/pse_postprocess/__init__.py b/ppocr/postprocess/pse_postprocess/__init__.py
+index eed166a..5e52eb8 100644
+--- a/ppocr/postprocess/pse_postprocess/__init__.py
++++ b/ppocr/postprocess/pse_postprocess/__init__.py
+@@ -12,4 +12,4 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-from .pse_postprocess import PSEPostProcess
++from paddleocr.ppocr.postprocess.pse_postprocess.pse_postprocess import PSEPostProcess
+diff --git a/ppocr/postprocess/pse_postprocess/pse/__init__.py b/ppocr/postprocess/pse_postprocess/pse/__init__.py
+index 6028802..3112521 100644
+--- a/ppocr/postprocess/pse_postprocess/pse/__init__.py
++++ b/ppocr/postprocess/pse_postprocess/pse/__init__.py
+@@ -30,4 +30,4 @@ if (
+     )
+ os.chdir(ori_path)
+ 
+-from .pse import pse
++from paddleocr.ppocr.postprocess.pse_postprocess.pse import pse
+diff --git a/ppocr/postprocess/pse_postprocess/pse_postprocess.py b/ppocr/postprocess/pse_postprocess/pse_postprocess.py
+index 4050dce..2d7ad28 100644
+--- a/ppocr/postprocess/pse_postprocess/pse_postprocess.py
++++ b/ppocr/postprocess/pse_postprocess/pse_postprocess.py
+@@ -25,7 +25,7 @@ import cv2
+ import paddle
+ from paddle.nn import functional as F
+ 
+-from ppocr.postprocess.pse_postprocess.pse import pse
++from paddleocr.ppocr.postprocess.pse_postprocess.pse import pse
+ 
+ 
+ class PSEPostProcess(object):
+diff --git a/ppocr/postprocess/sast_postprocess.py b/ppocr/postprocess/sast_postprocess.py
+index 8034cf8..1c9dda4 100644
+--- a/ppocr/postprocess/sast_postprocess.py
++++ b/ppocr/postprocess/sast_postprocess.py
+@@ -24,7 +24,7 @@ sys.path.append(__dir__)
+ sys.path.append(os.path.join(__dir__, ".."))
+ 
+ import numpy as np
+-from .locality_aware_nms import nms_locality
++from paddleocr.ppocr.postprocess.locality_aware_nms import nms_locality
+ import paddle
+ import cv2
+ import time
+@@ -145,7 +145,7 @@ class SASTPostProcess(object):
+ 
+     def nms(self, dets):
+         if self.is_python35:
+-            from ppocr.utils.utility import check_install
++            from paddleocr.ppocr.utils.utility import check_install
+ 
+             check_install("lanms", "lanms-nova")
+             import lanms
+diff --git a/ppocr/postprocess/table_postprocess.py b/ppocr/postprocess/table_postprocess.py
+index 11a877a..4e347ed 100644
+--- a/ppocr/postprocess/table_postprocess.py
++++ b/ppocr/postprocess/table_postprocess.py
+@@ -15,7 +15,7 @@
+ import numpy as np
+ import paddle
+ 
+-from .rec_postprocess import AttnLabelDecode
++from paddleocr.ppocr.postprocess.rec_postprocess import AttnLabelDecode
+ 
+ 
+ class TableLabelDecode(AttnLabelDecode):
+diff --git a/ppocr/postprocess/vqa_token_ser_layoutlm_postprocess.py b/ppocr/postprocess/vqa_token_ser_layoutlm_postprocess.py
+index a10f070..cc7399b 100644
+--- a/ppocr/postprocess/vqa_token_ser_layoutlm_postprocess.py
++++ b/ppocr/postprocess/vqa_token_ser_layoutlm_postprocess.py
+@@ -13,7 +13,7 @@
+ # limitations under the License.
+ import numpy as np
+ import paddle
+-from ppocr.utils.utility import load_vqa_bio_label_maps
++from paddleocr.ppocr.utils.utility import load_vqa_bio_label_maps
+ 
+ 
+ class VQASerTokenLayoutLMPostProcess(object):
+diff --git a/ppocr/utils/e2e_metric/Deteval.py b/ppocr/utils/e2e_metric/Deteval.py
+index f4767e1..c20c9c2 100644
+--- a/ppocr/utils/e2e_metric/Deteval.py
++++ b/ppocr/utils/e2e_metric/Deteval.py
+@@ -16,9 +16,9 @@ import json
+ import numpy as np
+ import scipy.io as io
+ 
+-from ppocr.utils.utility import check_install
++from paddleocr.ppocr.utils.utility import check_install
+ 
+-from ppocr.utils.e2e_metric.polygon_fast import iod, area_of_intersection, area
++from paddleocr.ppocr.utils.e2e_metric.polygon_fast import iod, area_of_intersection, area
+ 
+ 
+ def get_socre_A(gt_dir, pred_dict):
+diff --git a/ppocr/utils/e2e_utils/pgnet_pp_utils.py b/ppocr/utils/e2e_utils/pgnet_pp_utils.py
+index 71379e5..8853509 100644
+--- a/ppocr/utils/e2e_utils/pgnet_pp_utils.py
++++ b/ppocr/utils/e2e_utils/pgnet_pp_utils.py
+@@ -22,8 +22,8 @@ import sys
+ __dir__ = os.path.dirname(__file__)
+ sys.path.append(__dir__)
+ sys.path.append(os.path.join(__dir__, ".."))
+-from extract_textpoint_slow import *
+-from extract_textpoint_fast import generate_pivot_list_fast, restore_poly
++from paddleocr.ppocr.utils.e2e_utils.extract_textpoint_slow import *
++from paddleocr.ppocr.utils.e2e_utils.extract_textpoint_fast import generate_pivot_list_fast, restore_poly
+ 
+ 
+ class PGNet_PostProcess(object):
+diff --git a/ppocr/utils/export_model.py b/ppocr/utils/export_model.py
+index a62e810..bdb3c89 100644
+--- a/ppocr/utils/export_model.py
++++ b/ppocr/utils/export_model.py
+@@ -22,10 +22,10 @@ from paddle.jit import to_static
+ 
+ from collections import OrderedDict
+ from argparse import ArgumentParser, RawDescriptionHelpFormatter
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.logging import get_logger
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.logging import get_logger
+ 
+ 
+ def represent_dictionary_order(self, dict_data):
+diff --git a/ppocr/utils/loggers/__init__.py b/ppocr/utils/loggers/__init__.py
+index a73351f..eceb540 100644
+--- a/ppocr/utils/loggers/__init__.py
++++ b/ppocr/utils/loggers/__init__.py
+@@ -1,2 +1,2 @@
+-from .wandb_logger import WandbLogger
+-from .loggers import Loggers
++from paddleocr.ppocr.utils.loggers.wandb_logger import WandbLogger
++from paddleocr.ppocr.utils.loggers.loggers import Loggers
+diff --git a/ppocr/utils/loggers/loggers.py b/ppocr/utils/loggers/loggers.py
+index a14dbcb..8d02d49 100644
+--- a/ppocr/utils/loggers/loggers.py
++++ b/ppocr/utils/loggers/loggers.py
+@@ -1,4 +1,4 @@
+-from .wandb_logger import WandbLogger
++from paddleocr.ppocr.utils.loggers.wandb_logger import WandbLogger
+ 
+ 
+ class Loggers(object):
+diff --git a/ppocr/utils/loggers/wandb_logger.py b/ppocr/utils/loggers/wandb_logger.py
+index 44cbfc1..365b9d7 100644
+--- a/ppocr/utils/loggers/wandb_logger.py
++++ b/ppocr/utils/loggers/wandb_logger.py
+@@ -1,6 +1,6 @@
+ import os
+-from .base_logger import BaseLogger
+-from ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.loggers.base_logger import BaseLogger
++from paddleocr.ppocr.utils.logging import get_logger
+ 
+ 
+ class WandbLogger(BaseLogger):
+diff --git a/ppocr/utils/network.py b/ppocr/utils/network.py
+index b1737c6..6f9be1d 100644
+--- a/ppocr/utils/network.py
++++ b/ppocr/utils/network.py
+@@ -22,7 +22,7 @@ import os.path as osp
+ import paddle.distributed as dist
+ from tqdm import tqdm
+ 
+-from ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.logging import get_logger
+ 
+ MODELS_DIR = os.path.expanduser("~/.paddleocr/models/")
+ DOWNLOAD_RETRY_LIMIT = 3
+diff --git a/ppocr/utils/save_load.py b/ppocr/utils/save_load.py
+index afd7c6a..0824d73 100644
+--- a/ppocr/utils/save_load.py
++++ b/ppocr/utils/save_load.py
+@@ -24,8 +24,8 @@ import json
+ 
+ import paddle
+ 
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.network import maybe_download_params
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.network import maybe_download_params
+ 
+ __all__ = ["load_model"]
+ 
+diff --git a/ppstructure/kie/predict_kie_token_ser.py b/ppstructure/kie/predict_kie_token_ser.py
+index 57e8eb6..0fd9551 100644
+--- a/ppstructure/kie/predict_kie_token_ser.py
++++ b/ppstructure/kie/predict_kie_token_ser.py
+@@ -25,13 +25,13 @@ import json
+ import numpy as np
+ import time
+ 
+-import tools.infer.utility as utility
+-from ppocr.data import create_operators, transform
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.visual import draw_ser_results
+-from ppocr.utils.utility import get_image_file_list, check_and_read
+-from ppstructure.utility import parse_args
++import paddleocr.tools.infer.utility as utility
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.visual import draw_ser_results
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
++from paddleocr.ppstructure.utility import parse_args
+ 
+ from paddleocr import PaddleOCR
+ 
+diff --git a/ppstructure/kie/predict_kie_token_ser_re.py b/ppstructure/kie/predict_kie_token_ser_re.py
+index ebf5988..501bc15 100644
+--- a/ppstructure/kie/predict_kie_token_ser_re.py
++++ b/ppstructure/kie/predict_kie_token_ser_re.py
+@@ -25,14 +25,14 @@ import json
+ import numpy as np
+ import time
+ 
+-import tools.infer.utility as utility
+-from tools.infer_kie_token_ser_re import make_input
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.visual import draw_ser_results, draw_re_results
+-from ppocr.utils.utility import get_image_file_list, check_and_read
+-from ppstructure.utility import parse_args
+-from ppstructure.kie.predict_kie_token_ser import SerPredictor
++import paddleocr.tools.infer.utility as utility
++from paddleocr.tools.infer_kie_token_ser_re import make_input
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.visual import draw_ser_results, draw_re_results
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
++from paddleocr.ppstructure.utility import parse_args
++from paddleocr.ppstructure.kie.predict_kie_token_ser import SerPredictor
+ 
+ logger = get_logger()
+ 
+diff --git a/ppstructure/layout/predict_layout.py b/ppstructure/layout/predict_layout.py
+index 10bb117..89ca83a 100644
+--- a/ppstructure/layout/predict_layout.py
++++ b/ppstructure/layout/predict_layout.py
+@@ -24,13 +24,13 @@ import cv2
+ import numpy as np
+ import time
+ 
+-import tools.infer.utility as utility
+-from ppocr.data import create_operators, transform
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.utility import get_image_file_list, check_and_read
+-from ppstructure.utility import parse_args
+-from picodet_postprocess import PicoDetPostProcess
++import paddleocr.tools.infer.utility as utility
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
++from paddleocr.ppstructure.utility import parse_args
++from paddleocr.ppocr.postprocess.picodet_postprocess import PicoDetPostProcess
+ 
+ logger = get_logger()
+ 
+diff --git a/ppstructure/pdf2word/pdf2word.py b/ppstructure/pdf2word/pdf2word.py
+index 0e91605..55323a3 100644
+--- a/ppstructure/pdf2word/pdf2word.py
++++ b/ppstructure/pdf2word/pdf2word.py
+@@ -44,10 +44,10 @@ root = os.path.abspath(os.path.join(file, "../../"))
+ sys.path.append(file)
+ sys.path.insert(0, root)
+ 
+-from ppstructure.predict_system import StructureSystem, save_structure_res
+-from ppstructure.utility import parse_args, draw_structure_result
+-from ppocr.utils.network import download_with_progressbar
+-from ppstructure.recovery.recovery_to_doc import sorted_layout_boxes, convert_info_docx
++from paddleocr.ppstructure.predict_system import StructureSystem, save_structure_res
++from paddleocr.ppstructure.utility import parse_args, draw_structure_result
++from paddleocr.ppocr.utils.network import download_with_progressbar
++from paddleocr.ppstructure.recovery.recovery_to_doc import sorted_layout_boxes, convert_info_docx
+ 
+ # from ScreenShotWidget import ScreenShotWidget
+ 
+diff --git a/ppstructure/predict_system.py b/ppstructure/predict_system.py
+index 152e989..17102b4 100644
+--- a/ppstructure/predict_system.py
++++ b/ppstructure/predict_system.py
+@@ -29,14 +29,14 @@ import logging
+ from copy import deepcopy
+ 
+ from paddle.utils import try_import
+-from ppocr.utils.utility import get_image_file_list, check_and_read
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.visual import draw_ser_results, draw_re_results
+-from tools.infer.predict_system import TextSystem
+-from tools.infer.predict_rec import TextRecognizer
+-from ppstructure.layout.predict_layout import LayoutPredictor
+-from ppstructure.table.predict_table import TableSystem, to_excel
+-from ppstructure.utility import parse_args, draw_structure_result, cal_ocr_word_box
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.visual import draw_ser_results, draw_re_results
++from paddleocr.tools.infer.predict_system import TextSystem
++from paddleocr.tools.infer.predict_rec import TextRecognizer
++from paddleocr.ppstructure.layout.predict_layout import LayoutPredictor
++from paddleocr.ppstructure.table.predict_table import TableSystem, to_excel
++from paddleocr.ppstructure.utility import parse_args, draw_structure_result, cal_ocr_word_box
+ 
+ logger = get_logger()
+ 
+@@ -89,7 +89,7 @@ class StructureSystem(object):
+                 self.formula_system = TextRecognizer(args_formula)
+ 
+         elif self.mode == "kie":
+-            from ppstructure.kie.predict_kie_token_ser_re import SerRePredictor
++            from paddleocr.ppstructure.kie.predict_kie_token_ser_re import SerRePredictor
+ 
+             self.kie_predictor = SerRePredictor(args)
+ 
+@@ -369,11 +369,11 @@ def main(args):
+                 cv2.imwrite(img_save_path, draw_img)
+                 logger.info("result save to {}".format(img_save_path))
+             if args.recovery and res != []:
+-                from ppstructure.recovery.recovery_to_doc import (
++                from paddleocr.ppstructure.recovery.recovery_to_doc import (
+                     sorted_layout_boxes,
+                     convert_info_docx,
+                 )
+-                from ppstructure.recovery.recovery_to_markdown import (
++                from paddleocr.ppstructure.recovery.recovery_to_markdown import (
+                     convert_info_markdown,
+                 )
+ 
+diff --git a/ppstructure/recovery/recovery_to_doc.py b/ppstructure/recovery/recovery_to_doc.py
+index 1974a09..6fd4de8 100644
+--- a/ppstructure/recovery/recovery_to_doc.py
++++ b/ppstructure/recovery/recovery_to_doc.py
+@@ -22,9 +22,9 @@ from docx.enum.section import WD_SECTION
+ from docx.oxml.ns import qn
+ from docx.enum.table import WD_TABLE_ALIGNMENT
+ 
+-from ppstructure.recovery.table_process import HtmlToDocx
++from paddleocr.ppstructure.recovery.table_process import HtmlToDocx
+ 
+-from ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.logging import get_logger
+ 
+ logger = get_logger()
+ 
+diff --git a/ppstructure/recovery/recovery_to_markdown.py b/ppstructure/recovery/recovery_to_markdown.py
+index 833628e..655cb03 100644
+--- a/ppstructure/recovery/recovery_to_markdown.py
++++ b/ppstructure/recovery/recovery_to_markdown.py
+@@ -15,7 +15,7 @@
+ import os
+ import re
+ 
+-from ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.logging import get_logger
+ 
+ logger = get_logger()
+ 
+diff --git a/ppstructure/table/eval_table.py b/ppstructure/table/eval_table.py
+index b9e4661..89df0af 100644
+--- a/ppstructure/table/eval_table.py
++++ b/ppstructure/table/eval_table.py
+@@ -23,10 +23,10 @@ import cv2
+ import pickle
+ import paddle
+ from tqdm import tqdm
+-from ppstructure.table.table_metric import TEDS
+-from ppstructure.table.predict_table import TableSystem
+-from ppstructure.utility import init_args
+-from ppocr.utils.logging import get_logger
++from paddleocr.ppstructure.table.table_metric import TEDS
++from paddleocr.ppstructure.table.predict_table import TableSystem
++from paddleocr.ppstructure.utility import init_args
++from paddleocr.ppocr.utils.logging import get_logger
+ 
+ logger = get_logger()
+ 
+diff --git a/ppstructure/table/matcher.py b/ppstructure/table/matcher.py
+index ae32b4b..43548fa 100644
+--- a/ppstructure/table/matcher.py
++++ b/ppstructure/table/matcher.py
+@@ -13,7 +13,7 @@
+ # limitations under the License.
+ 
+ import numpy as np
+-from ppstructure.table.table_master_match import deal_eb_token, deal_bb
++from paddleocr.ppstructure.table.table_master_match import deal_eb_token, deal_bb
+ import html
+ 
+ 
+diff --git a/ppstructure/table/predict_structure.py b/ppstructure/table/predict_structure.py
+index 3881f9f..e9f021c 100644
+--- a/ppstructure/table/predict_structure.py
++++ b/ppstructure/table/predict_structure.py
+@@ -25,13 +25,13 @@ import numpy as np
+ import time
+ import json
+ 
+-import tools.infer.utility as utility
+-from ppocr.data import create_operators, transform
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.utility import get_image_file_list, check_and_read
+-from ppocr.utils.visual import draw_rectangle
+-from ppstructure.utility import parse_args
++import paddleocr.tools.infer.utility as utility
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
++from paddleocr.ppocr.utils.visual import draw_rectangle
++from paddleocr.ppstructure.utility import parse_args
+ 
+ logger = get_logger()
+ 
+diff --git a/ppstructure/table/predict_table.py b/ppstructure/table/predict_table.py
+index e1880cd..330c3b5 100644
+--- a/ppstructure/table/predict_table.py
++++ b/ppstructure/table/predict_table.py
+@@ -26,16 +26,16 @@ import copy
+ import logging
+ import numpy as np
+ import time
+-import tools.infer.predict_rec as predict_rec
+-import tools.infer.predict_det as predict_det
+-import tools.infer.utility as utility
+-from tools.infer.predict_system import sorted_boxes
+-from ppocr.utils.utility import get_image_file_list, check_and_read
+-from ppocr.utils.logging import get_logger
+-from ppstructure.table.matcher import TableMatch
+-from ppstructure.table.table_master_match import TableMasterMatcher
+-from ppstructure.utility import parse_args
+-import ppstructure.table.predict_structure as predict_strture
++import paddleocr.tools.infer.predict_rec as predict_rec
++import paddleocr.tools.infer.predict_det as predict_det
++import paddleocr.tools.infer.utility as utility
++from paddleocr.tools.infer.predict_system import sorted_boxes
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppstructure.table.matcher import TableMatch
++from paddleocr.ppstructure.table.table_master_match import TableMasterMatcher
++from paddleocr.ppstructure.utility import parse_args
++import paddleocr.ppstructure.table.predict_structure as predict_strture
+ 
+ logger = get_logger()
+ 
+diff --git a/ppstructure/table/table_metric/__init__.py b/ppstructure/table/table_metric/__init__.py
+index 70be931..149e513 100644
+--- a/ppstructure/table/table_metric/__init__.py
++++ b/ppstructure/table/table_metric/__init__.py
+@@ -13,4 +13,4 @@
+ # limitations under the License.
+ 
+ __all__ = ["TEDS"]
+-from .table_metric import TEDS
++from paddleocr.ppstructure.table.table_metric.table_metric import TEDS
+diff --git a/ppstructure/table/table_metric/table_metric.py b/ppstructure/table/table_metric/table_metric.py
+index 1ed4c45..5f2695c 100644
+--- a/ppstructure/table/table_metric/table_metric.py
++++ b/ppstructure/table/table_metric/table_metric.py
+@@ -13,7 +13,7 @@ from rapidfuzz.distance import Levenshtein
+ from apted import APTED, Config
+ from apted.helpers import Tree
+ from collections import deque
+-from .parallel import parallel_process
++from paddleocr.ppstructure.table.table_metric.parallel import parallel_process
+ from tqdm import tqdm
+ from paddle.utils import try_import
+ 
+diff --git a/ppstructure/utility.py b/ppstructure/utility.py
+index 97e434d..83d00ed 100644
+--- a/ppstructure/utility.py
++++ b/ppstructure/utility.py
+@@ -16,7 +16,7 @@ import ast
+ import PIL
+ from PIL import Image, ImageDraw, ImageFont
+ import numpy as np
+-from tools.infer.utility import (
++from paddleocr.tools.infer.utility import (
+     draw_ocr_box_txt,
+     str2bool,
+     str2int_tuple,
+diff --git a/tools/eval.py b/tools/eval.py
+index 1ad1ae7..9431d9c 100644
+--- a/tools/eval.py
++++ b/tools/eval.py
+@@ -24,12 +24,12 @@ sys.path.insert(0, __dir__)
+ sys.path.insert(0, os.path.abspath(os.path.join(__dir__, "..")))
+ 
+ import paddle
+-from ppocr.data import build_dataloader, set_signal_handlers
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.metrics import build_metric
+-from ppocr.utils.save_load import load_model
+-import tools.program as program
++from paddleocr.ppocr.data import build_dataloader, set_signal_handlers
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.metrics import build_metric
++from paddleocr.ppocr.utils.save_load import load_model
++import paddleocr.tools.program as program
+ 
+ 
+ def main():
+diff --git a/tools/export_center.py b/tools/export_center.py
+index e79c2b8..41da546 100644
+--- a/tools/export_center.py
++++ b/tools/export_center.py
+@@ -24,12 +24,12 @@ __dir__ = os.path.dirname(os.path.abspath(__file__))
+ sys.path.append(__dir__)
+ sys.path.append(os.path.abspath(os.path.join(__dir__, "..")))
+ 
+-from ppocr.data import build_dataloader, set_signal_handlers
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.utility import print_dict
+-import tools.program as program
++from paddleocr.ppocr.data import build_dataloader, set_signal_handlers
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.utility import print_dict
++import paddleocr.tools.program as program
+ 
+ 
+ def main():
+diff --git a/tools/export_model.py b/tools/export_model.py
+index da1bcbb..34c86a4 100644
+--- a/tools/export_model.py
++++ b/tools/export_model.py
+@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(__dir__, "..")))
+ 
+ import argparse
+ 
+-from tools.program import load_config, merge_config, ArgsParser
+-from ppocr.utils.export_model import export
++from paddleocr.tools.program import load_config, merge_config, ArgsParser
++from paddleocr.ppocr.utils.export_model import export
+ 
+ 
+ def main():
+diff --git a/tools/infer/predict_cls.py b/tools/infer/predict_cls.py
+index e4d5a88..f93895f 100644
+--- a/tools/infer/predict_cls.py
++++ b/tools/infer/predict_cls.py
+@@ -27,10 +27,10 @@ import math
+ import time
+ import traceback
+ 
+-import tools.infer.utility as utility
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.utility import get_image_file_list, check_and_read
++import paddleocr.tools.infer.utility as utility
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
+ 
+ logger = get_logger()
+ 
+diff --git a/tools/infer/predict_det.py b/tools/infer/predict_det.py
+index 02bce45..5a73633 100644
+--- a/tools/infer/predict_det.py
++++ b/tools/infer/predict_det.py
+@@ -25,11 +25,11 @@ import numpy as np
+ import time
+ import sys
+ 
+-import tools.infer.utility as utility
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.utility import get_image_file_list, check_and_read
+-from ppocr.data import create_operators, transform
+-from ppocr.postprocess import build_post_process
++import paddleocr.tools.infer.utility as utility
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.postprocess import build_post_process
+ import json
+ 
+ 
+diff --git a/tools/infer/predict_e2e.py b/tools/infer/predict_e2e.py
+index 52526e3..04229c6 100644
+--- a/tools/infer/predict_e2e.py
++++ b/tools/infer/predict_e2e.py
+@@ -25,11 +25,11 @@ import numpy as np
+ import time
+ import sys
+ 
+-import tools.infer.utility as utility
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.utility import get_image_file_list, check_and_read
+-from ppocr.data import create_operators, transform
+-from ppocr.postprocess import build_post_process
++import paddleocr.tools.infer.utility as utility
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.postprocess import build_post_process
+ 
+ logger = get_logger()
+ 
+diff --git a/tools/infer/predict_rec.py b/tools/infer/predict_rec.py
+index 6306a76..1aabe5e 100644
+--- a/tools/infer/predict_rec.py
++++ b/tools/infer/predict_rec.py
+@@ -28,10 +28,10 @@ import time
+ import traceback
+ import paddle
+ 
+-import tools.infer.utility as utility
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.utility import get_image_file_list, check_and_read
++import paddleocr.tools.infer.utility as utility
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
+ 
+ logger = get_logger()
+ 
+diff --git a/tools/infer/predict_sr.py b/tools/infer/predict_sr.py
+index 101c775..a5ac76f 100644
+--- a/tools/infer/predict_sr.py
++++ b/tools/infer/predict_sr.py
+@@ -28,10 +28,10 @@ import time
+ import traceback
+ import paddle
+ 
+-import tools.infer.utility as utility
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.utility import get_image_file_list, check_and_read
++import paddleocr.tools.infer.utility as utility
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
+ 
+ logger = get_logger()
+ 
+diff --git a/tools/infer/predict_system.py b/tools/infer/predict_system.py
+index bcb0758..6966ee0 100644
+--- a/tools/infer/predict_system.py
++++ b/tools/infer/predict_system.py
+@@ -28,13 +28,13 @@ import json
+ import time
+ import logging
+ from PIL import Image
+-import tools.infer.utility as utility
+-import tools.infer.predict_rec as predict_rec
+-import tools.infer.predict_det as predict_det
+-import tools.infer.predict_cls as predict_cls
+-from ppocr.utils.utility import get_image_file_list, check_and_read
+-from ppocr.utils.logging import get_logger
+-from tools.infer.utility import (
++import paddleocr.tools.infer.utility as utility
++import paddleocr.tools.infer.predict_rec as predict_rec
++import paddleocr.tools.infer.predict_det as predict_det
++import paddleocr.tools.infer.predict_cls as predict_cls
++from paddleocr.ppocr.utils.utility import get_image_file_list, check_and_read
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.tools.infer.utility import (
+     draw_ocr_box_txt,
+     get_rotate_crop_image,
+     get_minarea_rect_crop,
+diff --git a/tools/infer/utility.py b/tools/infer/utility.py
+index c40fc6b..3d40097 100644
+--- a/tools/infer/utility.py
++++ b/tools/infer/utility.py
+@@ -23,7 +23,7 @@ from PIL import Image, ImageDraw, ImageFont
+ import math
+ from paddle import inference
+ import random
+-from ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.logging import get_logger
+ 
+ 
+ def str2bool(v):
+diff --git a/tools/infer_cls.py b/tools/infer_cls.py
+index 6c26ff4..8e6c70d 100644
+--- a/tools/infer_cls.py
++++ b/tools/infer_cls.py
+@@ -29,12 +29,12 @@ os.environ["FLAGS_allocator_strategy"] = "auto_growth"
+ 
+ import paddle
+ 
+-from ppocr.data import create_operators, transform
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.utility import get_image_file_list
+-import tools.program as program
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.utility import get_image_file_list
++import paddleocr.tools.program as program
+ 
+ 
+ def main():
+diff --git a/tools/infer_det.py b/tools/infer_det.py
+index 6c02989..1e316ba 100644
+--- a/tools/infer_det.py
++++ b/tools/infer_det.py
+@@ -31,12 +31,12 @@ import cv2
+ import json
+ import paddle
+ 
+-from ppocr.data import create_operators, transform
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.utility import get_image_file_list
+-import tools.program as program
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.utility import get_image_file_list
++import paddleocr.tools.program as program
+ 
+ 
+ def draw_det_res(dt_boxes, config, img, img_name, save_path):
+diff --git a/tools/infer_e2e.py b/tools/infer_e2e.py
+index 02cd68a..162bda2 100644
+--- a/tools/infer_e2e.py
++++ b/tools/infer_e2e.py
+@@ -31,12 +31,12 @@ import cv2
+ import json
+ import paddle
+ 
+-from ppocr.data import create_operators, transform
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.utility import get_image_file_list
+-import tools.program as program
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.utility import get_image_file_list
++import paddleocr.tools.program as program
+ from PIL import Image, ImageDraw, ImageFont
+ import math
+ 
+diff --git a/tools/infer_kie.py b/tools/infer_kie.py
+index f3efaf9..6461e89 100644
+--- a/tools/infer_kie.py
++++ b/tools/infer_kie.py
+@@ -31,10 +31,10 @@ os.environ["FLAGS_allocator_strategy"] = "auto_growth"
+ import cv2
+ import paddle
+ 
+-from ppocr.data import create_operators, transform
+-from ppocr.modeling.architectures import build_model
+-from ppocr.utils.save_load import load_model
+-import tools.program as program
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.utils.save_load import load_model
++import paddleocr.tools.program as program
+ import time
+ 
+ 
+diff --git a/tools/infer_kie_token_ser.py b/tools/infer_kie_token_ser.py
+index 8fe25ac..c1c17d2 100644
+--- a/tools/infer_kie_token_ser.py
++++ b/tools/infer_kie_token_ser.py
+@@ -30,13 +30,13 @@ import cv2
+ import json
+ import paddle
+ 
+-from ppocr.data import create_operators, transform
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.visual import draw_ser_results
+-from ppocr.utils.utility import get_image_file_list, load_vqa_bio_label_maps
+-import tools.program as program
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.visual import draw_ser_results
++from paddleocr.ppocr.utils.utility import get_image_file_list, load_vqa_bio_label_maps
++import paddleocr.tools.program as program
+ 
+ 
+ def to_tensor(data):
+diff --git a/tools/infer_kie_token_ser_re.py b/tools/infer_kie_token_ser_re.py
+index a9589ca..f1c3403 100644
+--- a/tools/infer_kie_token_ser_re.py
++++ b/tools/infer_kie_token_ser_re.py
+@@ -31,15 +31,15 @@ import json
+ import paddle
+ import paddle.distributed as dist
+ 
+-from ppocr.data import create_operators, transform
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.visual import draw_re_results
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.utility import get_image_file_list, load_vqa_bio_label_maps, print_dict
+-from tools.program import ArgsParser, load_config, merge_config
+-from tools.infer_kie_token_ser import SerPredictor
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.visual import draw_re_results
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.utility import get_image_file_list, load_vqa_bio_label_maps, print_dict
++from paddleocr.tools.program import ArgsParser, load_config, merge_config
++from paddleocr.tools.infer_kie_token_ser import SerPredictor
+ 
+ 
+ class ReArgsParser(ArgsParser):
+diff --git a/tools/infer_rec.py b/tools/infer_rec.py
+index a3e8aef..68e0f12 100644
+--- a/tools/infer_rec.py
++++ b/tools/infer_rec.py
+@@ -30,12 +30,12 @@ os.environ["FLAGS_allocator_strategy"] = "auto_growth"
+ 
+ import paddle
+ 
+-from ppocr.data import create_operators, transform
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.utility import get_image_file_list
+-import tools.program as program
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.utility import get_image_file_list
++import paddleocr.tools.program as program
+ 
+ 
+ def main():
+diff --git a/tools/infer_sr.py b/tools/infer_sr.py
+index 4285625..d1d724c 100644
+--- a/tools/infer_sr.py
++++ b/tools/infer_sr.py
+@@ -32,12 +32,12 @@ os.environ["FLAGS_allocator_strategy"] = "auto_growth"
+ 
+ import paddle
+ 
+-from ppocr.data import create_operators, transform
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.utility import get_image_file_list
+-import tools.program as program
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.utility import get_image_file_list
++import paddleocr.tools.program as program
+ 
+ 
+ def main():
+diff --git a/tools/infer_table.py b/tools/infer_table.py
+index c386cef..a51b62b 100644
+--- a/tools/infer_table.py
++++ b/tools/infer_table.py
+@@ -31,14 +31,14 @@ os.environ["FLAGS_allocator_strategy"] = "auto_growth"
+ import paddle
+ from paddle.jit import to_static
+ 
+-from ppocr.data import create_operators, transform
+-from ppocr.modeling.architectures import build_model
+-from ppocr.postprocess import build_post_process
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.utility import get_image_file_list
+-from ppocr.utils.visual import draw_rectangle
+-from tools.infer.utility import draw_boxes
+-import tools.program as program
++from paddleocr.ppocr.data import create_operators, transform
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.utility import get_image_file_list
++from paddleocr.ppocr.utils.visual import draw_rectangle
++from paddleocr.tools.infer.utility import draw_boxes
++import paddleocr.tools.program as program
+ import cv2
+ 
+ 
+diff --git a/tools/program.py b/tools/program.py
+index b887ec4..3d0a916 100644
+--- a/tools/program.py
++++ b/tools/program.py
+@@ -31,14 +31,14 @@ import numpy as np
+ import copy
+ from argparse import ArgumentParser, RawDescriptionHelpFormatter
+ 
+-from ppocr.utils.stats import TrainingStats
+-from ppocr.utils.save_load import save_model
+-from ppocr.utils.utility import print_dict, AverageMeter
+-from ppocr.utils.logging import get_logger
+-from ppocr.utils.loggers import WandbLogger, Loggers
+-from ppocr.utils import profiler
+-from ppocr.data import build_dataloader
+-from ppocr.utils.export_model import export
++from paddleocr.ppocr.utils.stats import TrainingStats
++from paddleocr.ppocr.utils.save_load import save_model
++from paddleocr.ppocr.utils.utility import print_dict, AverageMeter
++from paddleocr.ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.loggers import WandbLogger, Loggers
++from paddleocr.ppocr.utils import profiler
++from paddleocr.ppocr.data import build_dataloader
++from paddleocr.ppocr.utils.export_model import export
+ 
+ 
+ class ArgsParser(ArgumentParser):
+diff --git a/tools/test_hubserving.py b/tools/test_hubserving.py
+index 5480107..8de314d 100644
+--- a/tools/test_hubserving.py
++++ b/tools/test_hubserving.py
+@@ -18,7 +18,7 @@ __dir__ = os.path.dirname(os.path.abspath(__file__))
+ sys.path.append(__dir__)
+ sys.path.append(os.path.abspath(os.path.join(__dir__, "..")))
+ 
+-from ppocr.utils.logging import get_logger
++from paddleocr.ppocr.utils.logging import get_logger
+ 
+ logger = get_logger()
+ 
+@@ -26,10 +26,10 @@ import cv2
+ import numpy as np
+ import time
+ from PIL import Image
+-from ppocr.utils.utility import get_image_file_list
+-from tools.infer.utility import draw_ocr, draw_boxes, str2bool
+-from ppstructure.utility import draw_structure_result
+-from ppstructure.predict_system import to_excel
++from paddleocr.ppocr.utils.utility import get_image_file_list
++from paddleocr.tools.infer.utility import draw_ocr, draw_boxes, str2bool
++from paddleocr.ppstructure.utility import draw_structure_result
++from paddleocr.ppstructure.predict_system import to_excel
+ 
+ import requests
+ import json
+diff --git a/tools/train.py b/tools/train.py
+index 7480b2b..839f2dd 100644
+--- a/tools/train.py
++++ b/tools/train.py
+@@ -28,17 +28,17 @@ import yaml
+ import paddle
+ import paddle.distributed as dist
+ 
+-from ppocr.data import build_dataloader, set_signal_handlers
+-from ppocr.modeling.architectures import build_model
+-from ppocr.losses import build_loss
+-from ppocr.optimizer import build_optimizer
+-from ppocr.postprocess import build_post_process
+-from ppocr.metrics import build_metric
+-from ppocr.utils.save_load import load_model
+-from ppocr.utils.utility import set_seed
+-from ppocr.modeling.architectures import apply_to_static
+-import tools.program as program
+-import tools.naive_sync_bn as naive_sync_bn
++from paddleocr.ppocr.data import build_dataloader, set_signal_handlers
++from paddleocr.ppocr.modeling.architectures import build_model
++from paddleocr.ppocr.losses import build_loss
++from paddleocr.ppocr.optimizer import build_optimizer
++from paddleocr.ppocr.postprocess import build_post_process
++from paddleocr.ppocr.metrics import build_metric
++from paddleocr.ppocr.utils.save_load import load_model
++from paddleocr.ppocr.utils.utility import set_seed
++from paddleocr.ppocr.modeling.architectures import apply_to_static
++import paddleocr.tools.program as program
++import paddleocr.tools.naive_sync_bn as naive_sync_bn
+ 
+ dist.get_world_size()
+ 
+-- 
+2.47.1.windows.2
+
