@@ -6,6 +6,39 @@
   </p>
 </p>
 
+## ℹ About
+
+This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. It behaves as the original PaddleOCR install for example via pip.
+
+You can decide between installing it via the setup installer or just downloading the folder with all the required files including the executable.  
+The installer also allows you to add the install location to you path which allows you to use paddleocr from every location.  
+  
+## Usage  
+  
+If you installed PaddleOCR via the setup wizard and added it to your Path you can just open a terminal and run the following command:  
+  
+```
+paddleocr -h
+```
+
+If you downloaded the 7zip file, unzip it to your desired location and open a terminal in there. Afterwards you can run the following command:
+
+```
+.\paddleocr.exe -h
+```
+
+
+## Notes  
+  
+- Don't be confused when it takes a longer time to start when running it the first time, especially when using the GPU version. This is the normal behavior. Afterwards it runs normally.
+
+- Please only report bugs that are specific to this standalone executable and are working correctly in the original repository.  
+  
+- A few changes had to be made to the source code to allow the creation of this executable. They can be viewed in the PaddleOCR-Standalone folder.  
+  
+- I will also add instructions on how to compile it yourself soon.
+
+
 ## Introduction
 
 PaddleOCR aims to create multilingual, awesome, leading, and practical OCR tools that help users train better models and apply them into practice.
@@ -13,19 +46,6 @@ PaddleOCR aims to create multilingual, awesome, leading, and practical OCR tools
 <div align="center">
     <img src="https://github.com/PaddlePaddle/PaddleOCR/releases/download/v2.8.0/demo.gif" width="800">
 </div>
-
-## Notes  
-  
-- This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed.
-
-- Don't be confused when it takes a longer time to start when running it the first time. This is the normal behavior. Afterwards it runs normally.
-
-- Please only report bugs that are specific to this standalone executable and are working correctly in the original repository.  
-  
-- A few changes had to be made to the source code to allow the creation of this executable. I will update it soon.  
-  
-- I will also add instructions on how to compile it yourself.
-  
 
 
 ## 📣 Recent updates ([more](https://paddlepaddle.github.io/PaddleOCR/latest/en/update.html))
