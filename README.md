@@ -8,10 +8,20 @@
 
 ## ℹ About
 
-This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. It behaves as the original PaddleOCR install for example via pip.
+This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. They behave as the original PaddleOCR install for example via pip.
 
 You can decide between installing it via the setup installer or just downloading the folder with all the required files including the executable.  
-The installer also allows you to add the install location to you path which allows you to use paddleocr from every location.  
+The installer also allows you to add the install location to you path which allows you to use paddleocr from every location.
+
+It also provides C++ executables (CPU and GPU version).  
+  
+Not only are the Standalone versions easier to setup, they also perform way better than PaddleOCR via Python. The following table shows the time to process 250 subtitles:  
+  
+| Version        | GPU (Batch) | CPU (Batch) |
+|------------|------------|---------------|
+| **Python** | 12s        | 79s           |  
+| **Python Standalone** | 10s        | 28.6s           |
+| **C++ Standalone** | 9s        | 24.5s     |
   
 ## Usage  
   
@@ -27,6 +37,12 @@ If you downloaded the 7zip file, unzip it to your desired location and open a te
 .\paddleocr.exe -h
 ```
 
+If you downloaded one of the 7zip files of the C++ version, unzip it to your desired location and open a terminal in there. Afterwards you can run the following command:
+
+```
+.\paddleocr.exe -help
+```
+
 
 ## Notes  
   
@@ -34,9 +50,12 @@ If you downloaded the 7zip file, unzip it to your desired location and open a te
 
 - Please only report bugs that are specific to this standalone executable and are working correctly in the original repository.  
   
-- A few changes had to be made to the source code to allow the creation of this executable. They can be viewed in the PaddleOCR-Standalone folder.  
+- A few changes had to be made to the source code to allow the creation of this executable (Python version). They can be viewed in the PaddleOCR-Standalone folder.
+
+- The output behavior of the C++ executables is slightly modified as well. Originally it only printed the results when all images where processed. This was updated to print the result as soon as an image is processed. Furthermore was the output updated to look more in line with the output from the Python version.  
+Changes can be viewed in the PaddleOCR-Standalone -> C++ folder. 
   
-- I will also add instructions on how to compile it yourself soon.
+- Setup installers for the C++ versions are not provided because they are not very user friendly and should only be used if you are interested in tinkering around and want maximum performance.
 
 
 ## Introduction
