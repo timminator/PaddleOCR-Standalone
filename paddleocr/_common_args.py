@@ -25,6 +25,7 @@ from ._constants import (
     SUPPORTED_PRECISION_LIST,
 )
 from ._utils.cli import str2bool
+from ._utils.logging import logger
 
 
 def parse_common_args(kwargs, *, default_enable_hpi):
@@ -56,10 +57,30 @@ def parse_common_args(kwargs, *, default_enable_hpi):
 
 
 def prepare_common_init_args(model_name, common_args):
-    device = common_args["device"]
-    if device is None:
-        device = get_default_device()
-    device_type, device_ids = parse_device(device)
+    requested_device = common_args["device"]
+    requested_device_type = None
+    requested_device_ids = None
+
+    if requested_device is not None:
+        requested_device_type, requested_device_ids = parse_device(requested_device)
+
+    supported_device = get_default_device()
+    supported_device_type, supported_device_ids = parse_device(supported_device)
+
+    # Fallback if the requested device is not supported
+    if requested_device_type == "gpu" and supported_device_type != "gpu":
+        logger.warning(
+            f"The specified device ({requested_device_type}) is not supported! Switching to CPU instead!"
+        )
+        device_type = supported_device_type
+        device_ids = supported_device_ids
+    elif requested_device_type is None:
+        device_type = supported_device_type
+        device_ids = supported_device_ids
+    else:
+        device_type = requested_device_type
+        device_ids = requested_device_ids
+
     if device_ids is not None:
         device_id = device_ids[0]
     else:

@@ -22,7 +22,7 @@ import warnings
 from .._utils.cli import (
     add_simple_inference_args,
     get_subcommand_args,
-    perform_simple_inference,
+    perform_simple_inference_ocr,
     str2bool,
 )
 from .._utils.deprecation import (
@@ -627,4 +627,4 @@ class PaddleOCRCLISubcommandExecutor(PipelineCLISubcommandExecutor):
             if val is None:
                 params.pop(name)
 
-        perform_simple_inference(PaddleOCR, params)
+        perform_simple_inference_ocr(PaddleOCR, params)
