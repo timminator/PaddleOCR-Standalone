@@ -1,25 +1,52 @@
-<div align="center">
+<p align="center">
   <p>
       <img width="100%" src="./docs/images/Banner.png" alt="PaddleOCR Banner">
+<p align="center">
+    Now as a Standalone executable!
+    <br />
   </p>
+</p>
 
-<!-- language -->
-English | [简体中文](./README_cn.md) | [繁體中文](./README_tcn.md) | [日本語](./README_ja.md) | [한국어](./README_ko.md) | [Français](./README_fr.md) | [Русский](./README_ru.md) | [Español](./README_es.md) | [العربية](./README_ar.md)
+## ℹ About
 
-<!-- icon -->
+This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. They behave as the original PaddleOCR install for example via pip.
 
-[![stars](https://img.shields.io/github/stars/PaddlePaddle/PaddleOCR?color=ccf)](https://github.com/PaddlePaddle/PaddleOCR)
-[![Downloads](https://img.shields.io/pypi/dm/paddleocr)](https://pypi.org/project/PaddleOCR/)
-![python](https://img.shields.io/badge/python-3.8～3.12-aff.svg)
-![os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-pink.svg)
-![hardware](https://img.shields.io/badge/hardware-cpu%2C%20gpu%2C%20xpu%2C%20npu-yellow.svg)
+You can decide between installing it via the setup installer or just downloading the folder with all the required files including the executable.  
+The installer also allows you to add the install location to you path which allows you to use paddleocr from every location.
+
+For C++ executables (CPU and GPU version) check out the older v1.0.0 release and the release-2.9.1/custom branch.  
+  
+## Usage  
+  
+If you installed PaddleOCR via the setup wizard and added it to your Path you can just open a terminal and run the following command:  
+  
+```
+paddleocr ocr -h
+```
+
+If you downloaded the 7zip file, unzip it to your desired location and open a terminal in there. Afterwards you can run the following command:
+
+```
+.\paddleocr.exe ocr -h
+```
+
+If you downloaded one of the 7zip files for Linux, unzip it to your desired location and open a terminal in there. Afterwards you can run the following command:
+
+```
+./paddleocr.bin ocr -h
+```
 
 
-[![AI Studio](https://img.shields.io/badge/PP_OCRv5-AI_Studio-green)](https://aistudio.baidu.com/community/app/91660/webUI)
-[![AI Studio](https://img.shields.io/badge/PP_StructureV3-AI_Studio-green)](https://aistudio.baidu.com/community/app/518494/webUI)
-[![AI Studio](https://img.shields.io/badge/PP_ChatOCRv4-AI_Studio-green)](https://aistudio.baidu.com/community/app/518493/webUI)
+## Notes  
+  
+- Don't be confused when it takes a longer time to start when running it the first time, especially when using the GPU version. This is the normal behavior. Afterwards it runs normally.
 
-</div>
+- The Standalone version only includes all features required for the OCR-feature to keep it as small as possible.
+
+- Please only report bugs that are specific to this standalone executable and are working correctly in the original repository.  
+  
+- A few changes were made to the source code to be more in line with the 2.x releases for better compatibility. They can be viewed in the commit history in the release-3.1/custom branch.
+
 
 ## 🚀 Introduction
 Since its initial release, PaddleOCR has gained widespread acclaim across academia, industry, and research communities, thanks to its cutting-edge algorithms and proven performance in real-world applications. It's already powering popular open-source projects like Umi-OCR, OmniParser, MinerU, and RAGFlow, making it the go-to OCR toolkit for developers worldwide.
