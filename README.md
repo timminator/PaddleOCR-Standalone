@@ -47,6 +47,39 @@ If you downloaded one of the 7zip files for Linux, unzip it to your desired loca
   
 - A few changes were made to the source code to be more in line with the 2.x releases for better compatibility. They can be viewed in the commit history in the release-3.1/custom branch.
 
+## Compile instructions
+
+You can of course also compile the Standalone version yourself. For that you need to do the following steps.
+
+1. Install the dependencies:
+
+    ```
+    pip install git+https://github.com/timminator/PaddleX.git@release-3.1/custom
+    pip install git+https://github.com/timminator/PaddleOCR-Standalone.git@release-3.1/custom
+    ```
+
+2. Install nuitka:
+
+    ```
+    pip install nuitka
+    ```
+
+3. Clone the repo:
+
+    ```
+    git clone --branch release-3.1/custom https://github.com/timminator/PaddleOCR-Standalone.git
+    ```
+
+   Navigate to the PaddleOCR-Standalone --> Wrappers folder. Now you can decide between compiling the CPU and GPU version. Choose the folder of your liking.
+   
+4. Compile the standalone version:
+
+    ```
+    python -m nuitka wrapper.py
+    ```
+
+The executable will be placed in a folder called wrapper.dist.
+
 
 ## 🚀 Introduction
 Since its initial release, PaddleOCR has gained widespread acclaim across academia, industry, and research communities, thanks to its cutting-edge algorithms and proven performance in real-world applications. It's already powering popular open-source projects like Umi-OCR, OmniParser, MinerU, and RAGFlow, making it the go-to OCR toolkit for developers worldwide.
