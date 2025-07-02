@@ -9,7 +9,7 @@
 
 ## ℹ About
 
-This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. They behave as the original PaddleOCR install for example via pip.
+This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. They behave as the original PaddleOCR install for example via pip. The latest release is based of the official PaddleOCR 3.1 release.
 
 You can decide between installing it via the setup installer or just downloading the folder with all the required files including the executable.  
 The installer also allows you to add the install location to you path which allows you to use paddleocr from every location.
@@ -50,6 +50,11 @@ If you downloaded one of the 7zip files for Linux, unzip it to your desired loca
 ## Compile instructions
 
 You can of course also compile the Standalone version yourself. For that you need to do the following steps.
+
+1. Install paddlepaddle (gpu):
+
+   Follow the instruction given under the following link:  
+   https://www.paddlepaddle.org.cn/en/install
 
 1. Install the dependencies:
 
