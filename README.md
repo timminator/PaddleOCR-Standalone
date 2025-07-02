@@ -36,6 +36,12 @@ If you downloaded one of the 7zip files for Linux, unzip it to your desired loca
 ./paddleocr.bin ocr -h
 ```
 
+An example command looks like this:
+
+```
+paddleocr ocr --i "Path\to\your\image" --use_doc_unwarping false --use_textline_orientation false --use_doc_orientation_classify false
+```
+
 
 ## Notes  
   
