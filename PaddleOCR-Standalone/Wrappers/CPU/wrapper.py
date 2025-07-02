@@ -26,8 +26,7 @@
 import sys
 import os
 
-current_dir = os.path.abspath(os.getcwd())
-os.environ["PADDLE_PDX_CACHE_HOME"] = os.path.join(current_dir, ".paddlex")
+os.environ["PADDLE_PDX_CACHE_HOME"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".paddlex")
 
 from paddleocr.__main__ import console_entry
 
