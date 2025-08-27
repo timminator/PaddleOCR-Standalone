@@ -1,26 +1,96 @@
-<div align="center">
+<p align="center">
   <p>
       <img width="100%" src="./docs/images/Banner.png" alt="PaddleOCR Banner">
+<p align="center">
+    Now as a Standalone executable!
+    <br />
   </p>
+</p>
 
-English | [简体中文](./readme/README_cn.md) | [繁體中文](./readme/README_tcn.md) | [日本語](./readme/README_ja.md) | [한국어](./readme/README_ko.md) | [Français](./readme/README_fr.md) | [Русский](./readme/README_ru.md) | [Español](./readme/README_es.md) | [العربية](./readme/README_ar.md)
+## ℹ About
 
-[![stars](https://img.shields.io/github/stars/PaddlePaddle/PaddleOCR?color=ccf)](https://github.com/PaddlePaddle/PaddleOCR)
-[![arXiv](https://img.shields.io/badge/arXiv-2507.05595-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2507.05595)
-[![PyPI Downloads](https://static.pepy.tech/badge/paddleocr/month)](https://pepy.tech/project/paddleocr)
-[![PyPI Downloads](https://static.pepy.tech/badge/paddleocr)](https://pepy.tech/project/paddleocr)
-[![Used by](https://img.shields.io/badge/Used%20by-5.8k%2B%20repositories-blue)](https://github.com/PaddlePaddle/PaddleOCR/network/dependents)
+This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. They behave as the original PaddleOCR install for example via pip. The latest release is based of the official PaddleOCR 3.2 release.
 
-![python](https://img.shields.io/badge/python-3.8~3.12-aff.svg)
-![os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-pink.svg)
-![hardware](https://img.shields.io/badge/hardware-cpu%2C%20gpu%2C%20xpu%2C%20npu-yellow.svg)
-[![License](https://img.shields.io/badge/license-Apache_2.0-green)](./LICENSE)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/PaddlePaddle/PaddleOCR)
+You can decide between installing it via the setup installer or just downloading the folder with all the required files including the executable.  
+The installer also allows you to add the install location to you path which allows you to use paddleocr from every location.
+
+For C++ executables (CPU and GPU version) check out the older v1.0.0 release and the release-2.9.1/custom branch.  
+  
+## Usage  
+  
+If you installed PaddleOCR via the setup wizard and added it to your Path you can just open a terminal and run the following command:  
+  
+```
+paddleocr ocr -h
+```
+
+If you downloaded the 7zip file, unzip it to your desired location and open a terminal in there. Afterwards you can run the following command:
+
+```
+.\paddleocr.exe ocr -h
+```
+
+If you downloaded one of the 7zip files for Linux, unzip it to your desired location and open a terminal in there. Afterwards you can run the following command:
+
+```
+./paddleocr.bin ocr -h
+```
+
+An example command looks like this:
+
+```
+paddleocr ocr --i "Path\to\your\image" --use_doc_unwarping false --use_textline_orientation false --use_doc_orientation_classify false
+```
 
 
-**PaddleOCR is an industry-leading, production-ready OCR and document AI engine, offering end-to-end solutions from text extraction to intelligent document understanding**
+## Notes  
+  
+- Don't be confused when it takes a longer time to start when running it the first time, especially when using the GPU version. This is the normal behavior. Afterwards it runs normally.
 
-</div>
+- The Standalone version only includes all features required for the OCR-feature to keep it as small as possible.
+
+- Please only report bugs that are specific to this standalone executable and are working correctly in the original repository.  
+  
+- A few changes were made to the source code to be more in line with the 2.x releases for better compatibility. They can be viewed in the commit history in the release-3.1/custom branch.
+
+## Compile instructions
+
+You can of course also compile the Standalone version yourself. For that you need to do the following steps.
+
+1. Install paddlepaddle (gpu):
+
+   Follow the instruction given under the following link:  
+   https://www.paddlepaddle.org.cn/en/install
+
+1. Install the dependencies:
+
+    ```
+    pip install git+https://github.com/PaddlePaddle/PaddleX.git@30621ce497935b8d36ba661e76894dc88e14bc0d
+    pip install git+https://github.com/timminator/PaddleOCR-Standalone.git@release/3.2-custom
+    ```
+
+2. Install nuitka:
+
+    ```
+    pip install nuitka
+    ```
+
+3. Clone the repo:
+
+    ```
+    git clone --branch release/3.2-custom https://github.com/timminator/PaddleOCR-Standalone.git
+    ```
+
+   Navigate to the PaddleOCR-Standalone --> Wrappers folder. Now you can decide between compiling the CPU and GPU version. Choose the folder of your liking.
+   
+4. Compile the standalone version:
+
+    ```
+    python -m nuitka wrapper.py
+    ```
+
+The executable will be placed in a folder called wrapper.dist.
+
 
 # PaddleOCR
 [![Framework](https://img.shields.io/badge/PaddlePaddle-3.0-orange)](https://www.paddlepaddle.org.cn/en)
