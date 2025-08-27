@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
 import logging
 
 from .._env import DISABLE_AUTO_LOGGING_CONFIG
 
-LOGGER_NAME = "paddleocr"
+LOGGER_NAME = "ppocr"
 
 logger = logging.getLogger(LOGGER_NAME)
 
@@ -25,11 +26,10 @@ def _set_up_logger():
     if DISABLE_AUTO_LOGGING_CONFIG:
         return
 
-    # Basically compatible with PaddleOCR 2.x, except for logging to stderr
     formatter = logging.Formatter(
         "[%(asctime)s] %(name)s %(levelname)s: %(message)s", datefmt="%Y/%m/%d %H:%M:%S"
     )
-    stream_handler = logging.StreamHandler()
+    stream_handler = logging.StreamHandler(stream=sys.stdout)
     stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)
     logger.setLevel(logging.ERROR)
