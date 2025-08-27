@@ -1,28 +1,96 @@
-
-<div align="center">
+<p align="center">
   <p>
-      <img width="800" src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/paddleocr/README/Banner.png" alt="Star-history">
+      <img width="100%" src="./docs/images/Banner.png" alt="PaddleOCR Banner">
+<p align="center">
+    Now as a Standalone executable!
+    <br />
   </p>
+</p>
+
+## ℹ About
+
+This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. They behave as the original PaddleOCR install for example via pip. The latest release is based of the official PaddleOCR 3.2 release.
+
+You can decide between installing it via the setup installer or just downloading the folder with all the required files including the executable.  
+The installer also allows you to add the install location to you path which allows you to use paddleocr from every location.
+
+For C++ executables (CPU and GPU version) check out the older v1.0.0 release and the release-2.9.1/custom branch.  
+  
+## Usage  
+  
+If you installed PaddleOCR via the setup wizard and added it to your Path you can just open a terminal and run the following command:  
+  
+```
+paddleocr ocr -h
+```
+
+If you downloaded the 7zip file, unzip it to your desired location and open a terminal in there. Afterwards you can run the following command:
+
+```
+.\paddleocr.exe ocr -h
+```
+
+If you downloaded one of the 7zip files for Linux, unzip it to your desired location and open a terminal in there. Afterwards you can run the following command:
+
+```
+./paddleocr.bin ocr -h
+```
+
+An example command looks like this:
+
+```
+paddleocr ocr --i "Path\to\your\image" --use_doc_unwarping false --use_textline_orientation false --use_doc_orientation_classify false
+```
 
 
+## Notes  
+  
+- Don't be confused when it takes a longer time to start when running it the first time, especially when using the GPU version. This is the normal behavior. Afterwards it runs normally.
 
-<h3>Global Leading OCR Toolkit & Document AI Engine</h3>
+- The Standalone version only includes all features required for the OCR-feature to keep it as small as possible.
 
-English | [简体中文](./readme/README_cn.md) | [繁體中文](./readme/README_tcn.md) | [日本語](./readme/README_ja.md) | [한국어](./readme/README_ko.md) | [Français](./readme/README_fr.md) | [Русский](./readme/README_ru.md) | [Español](./readme/README_es.md) | [العربية](./readme/README_ar.md)
+- Please only report bugs that are specific to this standalone executable and are working correctly in the original repository.  
+  
+- A few changes were made to the source code to be more in line with the 2.x releases for better compatibility. They can be viewed in the commit history in the release-3.1/custom branch.
 
-<!-- icon -->
+## Compile instructions
 
-[![PyPI Downloads](https://static.pepy.tech/badge/paddleocr)](https://pepy.tech/projects/paddleocr)
-[![Used by](https://img.shields.io/badge/Used%20by-6k%2B%20repositories-blue)](https://github.com/PaddlePaddle/PaddleOCR/network/dependents)
-![python](https://img.shields.io/badge/python-3.8~3.12-aff.svg)
-![os](https://img.shields.io/badge/os-linux%2C%20win%2C%20mac-pink.svg)
-![hardware](https://img.shields.io/badge/hardware-cpu%2C%20gpu%2C%20xpu%2C%20npu-yellow.svg)
+You can of course also compile the Standalone version yourself. For that you need to do the following steps.
 
-[![AI Studio](https://img.shields.io/badge/PaddleOCR-_Offiical_Website-1927BA?logo=data:image/png;base64,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&labelColor=white)](https://www.paddleocr.com)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/PaddlePaddle/PaddleOCR)
-[![License](https://img.shields.io/badge/license-Apache_2.0-green)](../LICENSE)
+1. Install paddlepaddle (gpu):
 
-</div>
+   Follow the instruction given under the following link:  
+   https://www.paddlepaddle.org.cn/en/install
+
+1. Install the dependencies:
+
+    ```
+    pip install git+https://github.com/PaddlePaddle/PaddleX.git@30621ce497935b8d36ba661e76894dc88e14bc0d
+    pip install git+https://github.com/timminator/PaddleOCR-Standalone.git@release/3.2-custom
+    ```
+
+2. Install nuitka:
+
+    ```
+    pip install nuitka
+    ```
+
+3. Clone the repo:
+
+    ```
+    git clone --branch release/3.2-custom https://github.com/timminator/PaddleOCR-Standalone.git
+    ```
+
+   Navigate to the PaddleOCR-Standalone --> Wrappers folder. Now you can decide between compiling the CPU and GPU version. Choose the folder of your liking.
+   
+4. Compile the standalone version:
+
+    ```
+    python -m nuitka wrapper.py
+    ```
+
+The executable will be placed in a folder called wrapper.dist.
+
 
 
 
