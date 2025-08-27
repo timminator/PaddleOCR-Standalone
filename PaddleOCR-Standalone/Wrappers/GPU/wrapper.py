@@ -4,7 +4,10 @@
 # nuitka-project: --include-package-data=paddleocr
 # nuitka-project: --include-package-data=paddlex
 
-# nuitka-project: --output-filename=paddleocr
+# nuitka-project-if: {OS} == "Windows":
+#     nuitka-project: --output-filename=paddleocr
+# nuitka-project-if: {OS} == "Linux":
+#     nuitka-project: --output-filename=paddleocr.bin
 
 # nuitka-project: --include-distribution-metadata=imagesize
 # nuitka-project: --include-distribution-metadata=opencv-contrib-python
