@@ -19,9 +19,9 @@
 # Windows-specific metadata for the executable
 # nuitka-project-if: {OS} == "Windows":
 #     nuitka-project: --file-description="PaddleOCR Standalone Executable"
-#     nuitka-project: --file-version="1.3.2"
+#     nuitka-project: --file-version="1.4.0"
 #     nuitka-project: --product-name="PaddleOCR-CPU"
-#     nuitka-project: --product-version="1.3.2"
+#     nuitka-project: --product-version="1.4.0"
 #     nuitka-project: --copyright="timminator"
 #     nuitka-project: --windows-icon-from-ico=paddleocr.ico
 

@@ -1,8 +1,8 @@
 #define MyAppName "PaddleOCR-GPU"
-#define MyAppVersion "1.3.2"
+#define MyAppVersion "1.4.0"
 #define MyAppURL "https://github.com/timminator/PaddleOCR-Standalone"
 #define MyAppExeName "paddleocr.exe"
-#define MyInstallerVersion "1.3.2.0"
+#define MyInstallerVersion "1.4.0.0"
 #define MyAppCopyright "timminator"
 
 #include "environment.iss"
@@ -41,9 +41,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "{app}"; Permissions: everyone-full
 
 [Files]
-Source: "..\PaddleOCR GPU\PaddleOCR-GPU-v1.3.2-CUDA-11.8\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PaddleOCR GPU\PaddleOCR-GPU-v1.3.2-CUDA-11.8\*.*"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PaddleOCR GPU\PaddleOCR-GPU-v1.3.2-CUDA-11.8\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\PaddleOCR GPU\PaddleOCR-GPU-v1.4.0-CUDA-11.8\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PaddleOCR GPU\PaddleOCR-GPU-v1.4.0-CUDA-11.8\*.*"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PaddleOCR GPU\PaddleOCR-GPU-v1.4.0-CUDA-11.8\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);
