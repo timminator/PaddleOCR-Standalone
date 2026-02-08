@@ -31,10 +31,11 @@ import sys
 import os
 
 os.environ["PADDLE_PDX_CACHE_HOME"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".paddlex")
+os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
 
 from paddleocr.__main__ import console_entry
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1: 
-        sys.argv.append("--help") 
+    if len(sys.argv) == 1:
+        sys.argv.append("--help")
     console_entry()

@@ -114,7 +114,7 @@ def perform_simple_inference_ocr(wrapper_cls, params, predict_param_names=None):
         for i, res in enumerate(result):
             logger.info(f"Processed item {i+1} in {(time.time()-t1) * 1000} ms")
             t1 = time.time()
-            res.print()
+            print_res(res)
             if save_path:
                 res.save_all(save_path)
     finally:
