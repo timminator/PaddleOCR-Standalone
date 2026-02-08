@@ -38,3 +38,7 @@ test_tipc/web/node_modules/
 
 .venv/
 .worktrees/
+PaddleOCR-Standalone/Wrappers/GPU/wrapper.dist/
+PaddleOCR-Standalone/Wrappers/GPU/nuitka-crash-report.xml
+PaddleOCR-Standalone/Wrappers/CPU/wrapper.dist/
+PaddleOCR-Standalone/Wrappers/CPU/nuitka-crash-report.xml
