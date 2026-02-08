@@ -13,6 +13,7 @@
 # nuitka-project: --include-distribution-metadata=opencv-contrib-python
 # nuitka-project: --include-distribution-metadata=pyclipper
 # nuitka-project: --include-distribution-metadata=pypdfium2
+# nuitka-project: --include-distribution-metadata=python-bidi
 # nuitka-project: --include-distribution-metadata=shapely
 
 

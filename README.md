@@ -65,6 +65,7 @@ You can of course also compile the Standalone version yourself. For that you nee
 1. Install the dependencies:
 
     ```
+    pip install git+https://github.com/timminator/PaddleX.git@release/3.4-custom
     pip install git+https://github.com/timminator/PaddleOCR-Standalone.git@release/3.4-custom
     ```
 
