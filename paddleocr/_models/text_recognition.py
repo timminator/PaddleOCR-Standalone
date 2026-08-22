@@ -16,6 +16,7 @@ from .._utils.cli import (
     add_simple_inference_args,
     get_subcommand_args,
     perform_simple_inference,
+    print_res_rec
 )
 from .base import PaddleXPredictorWrapper, PredictorCLISubcommandExecutor
 
@@ -61,4 +62,4 @@ class TextRecognitionSubcommandExecutor(PredictorCLISubcommandExecutor):
 
     def execute_with_args(self, args):
         params = get_subcommand_args(args)
-        perform_simple_inference(TextRecognition, params)
+        perform_simple_inference(TextRecognition, params, print_func=print_res_rec)

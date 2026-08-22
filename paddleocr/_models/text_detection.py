@@ -16,6 +16,7 @@ from .._utils.cli import (
     add_simple_inference_args,
     get_subcommand_args,
     perform_simple_inference,
+    print_res_det
 )
 from .base import PaddleXPredictorWrapper, PredictorCLISubcommandExecutor
 from ._text_detection import TextDetectionMixin, TextDetectionSubcommandExecutorMixin
@@ -44,4 +45,4 @@ class TextDetectionSubcommandExecutor(
 
     def execute_with_args(self, args):
         params = get_subcommand_args(args)
-        perform_simple_inference(TextDetection, params)
+        perform_simple_inference(TextDetection, params, print_func=print_res_det)

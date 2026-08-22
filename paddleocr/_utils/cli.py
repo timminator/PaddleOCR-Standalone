@@ -45,7 +45,7 @@ def add_simple_inference_args(subparser, *, input_help=None):
     )
 
 
-def perform_simple_inference(wrapper_cls, params, predict_param_names=None):
+def perform_simple_inference(wrapper_cls, params, predict_param_names=None, print_func=None):
     params = params.copy()
 
     input_ = params.pop("input")
@@ -68,14 +68,19 @@ def perform_simple_inference(wrapper_cls, params, predict_param_names=None):
         for i, res in enumerate(result):
             logger.info(f"Processed item {i+1} in {(time.time()-t1) * 1000} ms")
             t1 = time.time()
-            res.print()
+
+            if print_func:
+                print_func(res)
+            else:
+                res.print()
+
             if save_path:
                 res.save_all(save_path)
     finally:
         wrapper.close()
 
 
-def print_res(res):
+def print_res_ocr(res):
     logger.info(f"{'*' * 10}{res['input_path']}{'*' * 10}")
 
     boxes = res["rec_polys"]
@@ -91,31 +96,29 @@ def print_res(res):
         logger.info(f"[{box_list}, ({repr(text)}, {score})]")
 
 
-def perform_simple_inference_ocr(wrapper_cls, params, predict_param_names=None):
-    params = params.copy()
+def print_res_det(res):
+    logger.info(f"{'*' * 10}{res['input_path']}{'*' * 10}")
 
-    input_ = params.pop("input")
-    save_path = params.pop("save_path")
+    boxes = res["dt_polys"]
+    scores = res["dt_scores"]
 
-    if predict_param_names is not None:
-        predict_params = {}
-        for name in predict_param_names:
-            predict_params[name] = params.pop(name)
-    else:
-        predict_params = {}
-    init_params = params
+    if boxes.size == 0:
+        logger.warning(f"No text found in image {res['input_path']}")
+        return
 
-    wrapper = wrapper_cls(**init_params)
+    for box, score in zip(boxes, scores):
+        box_list = [[float(x), float(y)] for x, y in box.tolist()]
+        logger.info(f"[{box_list}, ({score})]")
 
-    try:
-        result = wrapper.predict_iter(input_, **predict_params)
 
-        t1 = time.time()
-        for i, res in enumerate(result):
-            logger.info(f"Processed item {i+1} in {(time.time()-t1) * 1000} ms")
-            t1 = time.time()
-            print_res(res)
-            if save_path:
-                res.save_all(save_path)
-    finally:
-        wrapper.close()
+def print_res_rec(res):
+    logger.info(f"{'*' * 10}{res['input_path']}{'*' * 10}")
+
+    text = res["rec_text"]
+    score = res["rec_score"]
+
+    if not text:
+        logger.warning(f"No text found in image {res['input_path']}")
+        return
+
+    logger.info(f"[({repr(text)}, {score})]")
