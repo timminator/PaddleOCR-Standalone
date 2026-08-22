@@ -9,7 +9,7 @@
 
 ## ℹ About
 
-This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. They behave as the original PaddleOCR install for example via pip. The latest release is based of the official PaddleOCR 3.4 release.
+This repository provides executables (CPU and GPU version) that can be run without having python or any other packages installed. They behave as the original PaddleOCR install for example via pip. The latest release is based of the official PaddleOCR 3.7 release.
 
 You can decide between installing it via the setup installer or just downloading the folder with all the required files including the executable.  
 The installer also allows you to add the install location to you path which allows you to use paddleocr from every location.
@@ -65,8 +65,7 @@ You can of course also compile the Standalone version yourself. For that you nee
 1. Install the dependencies:
 
     ```
-    pip install git+https://github.com/timminator/PaddleX.git@release/3.4-custom
-    pip install git+https://github.com/timminator/PaddleOCR-Standalone.git@release/3.4-custom
+    pip install git+https://github.com/timminator/PaddleOCR-Standalone.git@release/3.7-custom
     ```
 
 2. Install nuitka:
@@ -78,7 +77,7 @@ You can of course also compile the Standalone version yourself. For that you nee
 3. Clone the repo:
 
     ```
-    git clone --branch release/3.4-custom https://github.com/timminator/PaddleOCR-Standalone.git
+    git clone --branch release/3.7-custom https://github.com/timminator/PaddleOCR-Standalone.git
     ```
 
    Navigate to the PaddleOCR-Standalone --> Wrappers folder. Now you can decide between compiling the CPU and GPU version. Choose the folder of your liking.

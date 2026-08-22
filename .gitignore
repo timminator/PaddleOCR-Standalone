@@ -38,7 +38,16 @@ test_tipc/web/node_modules/
 
 .venv/
 .worktrees/
-PaddleOCR-Standalone/Wrappers/GPU/wrapper.dist/
-PaddleOCR-Standalone/Wrappers/GPU/nuitka-crash-report.xml
+PaddleOCR-Standalone/Wrappers/GPU-CUDA-11.8/wrapper.dist/
+PaddleOCR-Standalone/Wrappers/GPU-CUDA-11.8/PaddleOCR-GPU-v*.*.0-CUDA-11.8.7z
+PaddleOCR-Standalone/Wrappers/GPU-CUDA-11.8/PaddleOCR-GPU-v*.*.0-CUDA-11.8/*
+PaddleOCR-Standalone/Wrappers/GPU-CUDA-11.8/wrapper.build/
+PaddleOCR-Standalone/Wrappers/GPU-CUDA-12.9/wrapper.dist/
+PaddleOCR-Standalone/Wrappers/GPU-CUDA-12.9/PaddleOCR-GPU-v*.*.0-CUDA-12.9.7z
+PaddleOCR-Standalone/Wrappers/GPU-CUDA-12.9/PaddleOCR-GPU-v*.*.0-CUDA-12.9/*
+PaddleOCR-Standalone/Wrappers/GPU-CUDA-12.9/wrapper.build/
 PaddleOCR-Standalone/Wrappers/CPU/wrapper.dist/
-PaddleOCR-Standalone/Wrappers/CPU/nuitka-crash-report.xml
+PaddleOCR-Standalone/Wrappers/CPU/PaddleOCR-CPU-v*.*.0.7z
+PaddleOCR-Standalone/Wrappers/CPU/PaddleOCR-CPU-v*.*.0/*
+PaddleOCR-Standalone/Wrappers/CPU/wrapper.build/
+PaddleOCR-Standalone/Installer/Output/

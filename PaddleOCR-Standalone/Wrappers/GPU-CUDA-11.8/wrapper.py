@@ -4,6 +4,8 @@
 # nuitka-project: --include-package-data=paddleocr
 # nuitka-project: --include-package-data=paddlex
 
+# nuitka-project: --include-windows-runtime-dlls=yes
+
 # nuitka-project-if: {OS} == "Windows":
 #     nuitka-project: --output-filename=paddleocr
 # nuitka-project-if: {OS} == "Linux":
@@ -20,9 +22,9 @@
 # Windows-specific metadata for the executable
 # nuitka-project-if: {OS} == "Windows":
 #     nuitka-project: --file-description="PaddleOCR Standalone Executable"
-#     nuitka-project: --file-version="1.4.0"
+#     nuitka-project: --file-version="3.7.0"
 #     nuitka-project: --product-name="PaddleOCR-GPU"
-#     nuitka-project: --product-version="1.4.0"
+#     nuitka-project: --product-version="3.7.0"
 #     nuitka-project: --copyright="timminator"
 #     nuitka-project: --windows-icon-from-ico=paddleocr.ico
 
@@ -30,7 +32,11 @@
 import sys
 import os
 
-os.environ["PADDLE_PDX_CACHE_HOME"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".paddlex")
+portable_flag = os.path.join(os.path.dirname(os.path.abspath(__file__)), "portable_mode.txt")
+
+if os.path.exists(portable_flag):
+    os.environ["PADDLE_PDX_CACHE_HOME"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".paddlex")
+
 os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
 
 from paddleocr.__main__ import console_entry

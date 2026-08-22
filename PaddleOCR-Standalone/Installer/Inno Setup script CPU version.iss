@@ -1,8 +1,8 @@
 #define MyAppName "PaddleOCR-CPU"
-#define MyAppVersion "1.4.0"
+#define MyAppVersion "3.7.0"
 #define MyAppURL "https://github.com/timminator/PaddleOCR-Standalone"
 #define MyAppExeName "paddleocr.exe"
-#define MyInstallerVersion "1.4.0.0"
+#define MyInstallerVersion "3.7.0.0"
 #define MyAppCopyright "timminator"
 
 #include "environment.iss"
@@ -19,11 +19,11 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={commonpf64}\{#MyAppName}
 UsePreviousAppDir=yes
-LicenseFile=..\LICENSE
+LicenseFile=..\..\LICENSE
 DisableProgramGroupPage=yes
 PrivilegesRequired=admin
 OutputBaseFilename={#MyAppName}-v{#MyAppVersion}-setup-x64
-SetupIconFile=..\paddleocr.ico
+SetupIconFile=..\Wrappers\CPU\paddleocr.ico
 Compression=lzma2/ultra64
 InternalCompressLevel=ultra64
 SolidCompression=yes
@@ -41,9 +41,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "{app}"; Permissions: everyone-full
 
 [Files]
-Source: "..\PaddleOCR CPU\PaddleOCR-CPU-v1.4.0\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PaddleOCR CPU\PaddleOCR-CPU-v1.4.0\*.*"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PaddleOCR CPU\PaddleOCR-CPU-v1.4.0\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\Wrappers\CPU\wrapper.dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Wrappers\CPU\wrapper.dist\*.*"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Wrappers\CPU\wrapper.dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);

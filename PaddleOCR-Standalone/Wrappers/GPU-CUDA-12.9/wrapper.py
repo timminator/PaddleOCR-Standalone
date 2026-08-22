@@ -23,7 +23,7 @@
 # nuitka-project-if: {OS} == "Windows":
 #     nuitka-project: --file-description="PaddleOCR Standalone Executable"
 #     nuitka-project: --file-version="3.7.0"
-#     nuitka-project: --product-name="PaddleOCR-CPU"
+#     nuitka-project: --product-name="PaddleOCR-GPU"
 #     nuitka-project: --product-version="3.7.0"
 #     nuitka-project: --copyright="timminator"
 #     nuitka-project: --windows-icon-from-ico=paddleocr.ico
